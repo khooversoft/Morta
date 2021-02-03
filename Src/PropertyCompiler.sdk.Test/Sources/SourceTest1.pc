@@ -1,0 +1,26 @@
+﻿city = "City";
+
+include "file1";
+
+resource resourceId = "file2";
+
+
+firstName = "Jeff Roberts";
+fullName = { First = "Jeff", Last = "Roberts" }
+
+address = {
+    street = "One street",
+    city = city,
+    State = "state",
+    Zip = "zipCode"
+}
+
+profile = {
+    firstName = firstName,
+    fullName = fullName {
+        middleInitial = "M"
+    },
+    address = address {
+        zipCode = "98033"
+    }
+}

@@ -1,0 +1,60 @@
+﻿using PropertyCompiler.sdk.Grammar;
+using PropertyCompiler.sdk.Syntax;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Toolbox.Extensions;
+using Toolbox.Language.Parser;
+using Toolbox.Parser;
+using Toolbox.Tools;
+
+namespace PropertyCompiler.sdk.Expressions
+{
+    /// <summary>
+    /// 
+    /// include file;
+    ///     
+    /// </summary>
+    /// 
+    public class IncludeExpressionBuilder : IExpressionBuilder
+    {
+        private static readonly RuleBlock<SymbolType> _processingRules = new RuleBlock<SymbolType>()
+        {
+            new CodeBlock<SymbolType>()
+                + Symbols.Include
+                + Symbols.Constant
+                + Symbols.SemiColon
+        };
+
+        public RuleBlock<SymbolType> ProcessingRules => _processingRules;
+
+        public SyntaxNode? Create(SyntaxTree syntaxTree)
+        {
+            SymbolNode<SymbolType>? symbolParser = new SymbolParser<SymbolType>(_processingRules)
+                .Parse(syntaxTree.SymbolParserContext);
+
+            if (symbolParser == null) return null;
+
+            var stack = new Stack<ISymbolToken>(symbolParser.Reverse<ISymbolToken>());
+
+            string includePath = stack.GetNextValue().Value;
+
+            return new IncludeExpression(syntaxTree, includePath);
+        }
+    }
+
+    public class IncludeExpression : SyntaxNode
+    {
+        public IncludeExpression(SyntaxTree syntaxTree, string includePath)
+            : base(syntaxTree)
+        {
+            includePath.VerifyNotNull(nameof(includePath));
+
+            IncludePath = includePath;
+        }
+
+        public string IncludePath { get; }
+    }
+}
