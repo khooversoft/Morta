@@ -39,13 +39,39 @@ namespace Toolbox.Language.Parser
 
         public SymbolNode<T>? Parse(SymbolParserContext context)
         {
-            foreach (ICodeBlock<T> rule in _productionRules)
-            {
-                SymbolNode<T>? syntaxNode = rule.Build(context);
-                if (syntaxNode != null) return syntaxNode;
-            }
+            return new SymbolMatcher<T>().Build(context, _productionRules);
 
-            return null;
+            //var allSyntaxNode = new SymbolNode<T>();
+
+            //foreach (IGrammar<T> rule in _productionRules)
+            //{
+            //    SymbolNode<T>? syntaxNode;
+
+            //    switch (rule)
+            //    {
+            //        case ICodeBlock<T> codeBlock:
+            //            syntaxNode = codeBlock.Build(context);
+            //            break;
+
+            //        case IGrammar<T> grammer:
+            //            var grammerCodeBlock = new CodeBlock<T>() + grammer;
+            //            syntaxNode = grammerCodeBlock.Build(context);
+            //            break;
+
+            //        default:
+            //            throw new ArgumentException($"Unknown rule {rule.GetType().FullName}");
+            //    }
+
+            //    if (syntaxNode == null) return null;
+            //    allSyntaxNode += syntaxNode;
+
+            //    //SymbolNode<T>? syntaxNode = rule.Build(context);
+            //    //if (syntaxNode == null) return null;
+
+            //    //allSyntaxNode += syntaxNode;
+            //}
+
+            //return allSyntaxNode;
         }
     }
 }

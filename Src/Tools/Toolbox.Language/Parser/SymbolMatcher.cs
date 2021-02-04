@@ -34,6 +34,7 @@ namespace Toolbox.Language.Parser
                             break;
 
                         case IGrammarToken<T> grammar:
+                            if( token.Value != grammar.Match) return DumpSyntaxNode($"ERR: value does not match, value={token.Value}, expression={grammar}");
                             syntaxNode.Add(grammar.CreateToken());
                             break;
 

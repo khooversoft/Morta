@@ -40,7 +40,7 @@ namespace Toolbox.Language.Test
         public static IGrammarToken<TokenType> Comma = new GrammarToken<TokenType>(TokenType.Comma, ",");
 
         public static IGrammarToken<TokenType> DeclareObject = new GrammarToken<TokenType>(TokenType.DeclareObject, "declare", GrammarFlags.Keyword);
-        public static IGrammarToken<TokenType> With = new GrammarToken<TokenType>(TokenType.DeclareObject, "with", GrammarFlags.Keyword);
+        public static IGrammarToken<TokenType> With = new GrammarToken<TokenType>(TokenType.With, "with", GrammarFlags.Keyword);
 
         public static IExpression<TokenType> TypeName = new GrammarValue<TokenType>(TokenType.TypeName);
         public static IExpression<TokenType> VariableName = new GrammarValue<TokenType>(TokenType.VariableName);
