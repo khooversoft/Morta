@@ -9,7 +9,7 @@ using Toolbox.Language.Parser;
 
 namespace Toolbox.Language.ProcessingRules
 {
-    public class Choice<T> : List<IGrammar<T>>, IRuleBlock<T> where T : Enum
+    public class Choice<T> : List<IGrammar<T>>, ICodeBlock<T> where T : Enum
     {
         public SymbolNode<T>? Build(SymbolParserContext context)
         {

@@ -10,7 +10,7 @@ namespace PropertyCompiler.sdk.Syntax
 {
     public interface IExpressionBuilder
     {
-        public RuleBlock<SymbolType> ProcessingRules { get; }
+        public CodeBlock<SymbolType> ProcessingRules { get; }
 
         public SyntaxNode? Create(SyntaxTree syntaxTree);
     }

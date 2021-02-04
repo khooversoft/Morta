@@ -17,7 +17,7 @@ namespace Toolbox.Language.Test
         [InlineData("int ;")]
         public void SimpleVariableDefine_ShouldFail(string command)
         {
-            RuleBlock<TokenType> processingRules = new RuleBlock<TokenType>()
+            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
             {
                 new CodeBlock<TokenType>() + LanguageSyntax.TypeName + LanguageSyntax.VariableName + LanguageSyntax.SemiColon,
             };
@@ -33,7 +33,7 @@ namespace Toolbox.Language.Test
         {
             string command = "int i;";
 
-            RuleBlock<TokenType> processingRules = new RuleBlock<TokenType>()
+            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
             {
                 new CodeBlock<TokenType>() + LanguageSyntax.TypeName + LanguageSyntax.VariableName + LanguageSyntax.SemiColon,
             };
@@ -58,7 +58,7 @@ namespace Toolbox.Language.Test
         {
             string command = "declare objectName =";
 
-            RuleBlock<TokenType> processingRules = new RuleBlock<TokenType>()
+            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
             {
                 new CodeBlock<TokenType>()
                     + LanguageSyntax.DeclareObject
@@ -86,7 +86,7 @@ namespace Toolbox.Language.Test
         {
             string command = "declare objectName =; name=value";
 
-            RuleBlock<TokenType> processingRules = new RuleBlock<TokenType>()
+            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
             {
                 new CodeBlock<TokenType>()
                     + LanguageSyntax.DeclareObject

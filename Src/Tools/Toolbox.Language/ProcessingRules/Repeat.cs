@@ -11,7 +11,7 @@ using Toolbox.Tokenizer.Token;
 
 namespace Toolbox.Language.ProcessingRules
 {
-    public class Repeat<T> : List<IGrammar<T>>, IRuleBlock<T> where T : Enum
+    public class Repeat<T> : List<IGrammar<T>>, ICodeBlock<T> where T : Enum
     {
         public SymbolNode<T>? Build(SymbolParserContext context)
         {

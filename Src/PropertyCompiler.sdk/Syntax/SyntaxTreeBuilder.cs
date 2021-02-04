@@ -29,7 +29,7 @@ namespace PropertyCompiler.sdk.Syntax
             _expressionBuilders.VerifyAssert(x => x.Count > 0, "No expression nodes");
             _rawDataLines.VerifyAssert(x => x.Count > 0, "No raw data line(s)");
 
-            RuleBlock<SymbolType> allRules = _expressionBuilders.Aggregate(new RuleBlock<SymbolType>(), (a, x) => a += x.ProcessingRules);
+            CodeBlock<SymbolType> allRules = _expressionBuilders.Aggregate(new CodeBlock<SymbolType>(), (a, x) => a += x.ProcessingRules);
             string rawData = _rawDataLines.Aggregate(string.Empty, (a, x) => a += x);
 
             IReadOnlyList<IToken> tokens = new TokenParser<SymbolType>(allRules).Parse(rawData);

@@ -14,11 +14,11 @@ namespace Toolbox.Language.Parser
 {
     public class SymbolParser<T> where T : Enum
     {
-        private readonly RuleBlock<T> _productionRules;
+        private readonly CodeBlock<T> _productionRules;
         private readonly Action<string> _logger;
         private readonly TokenParser<T> _tokenizer;
 
-        public SymbolParser(RuleBlock<T> productionRules, Action<string>? logger = null)
+        public SymbolParser(CodeBlock<T> productionRules, Action<string>? logger = null)
         {
             productionRules.VerifyNotNull(nameof(productionRules));
 
@@ -39,7 +39,7 @@ namespace Toolbox.Language.Parser
 
         public SymbolNode<T>? Parse(SymbolParserContext context)
         {
-            foreach (IRuleBlock<T> rule in _productionRules)
+            foreach (ICodeBlock<T> rule in _productionRules)
             {
                 SymbolNode<T>? syntaxNode = rule.Build(context);
                 if (syntaxNode != null) return syntaxNode;

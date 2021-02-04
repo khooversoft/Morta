@@ -25,7 +25,7 @@ namespace Toolbox.Language.Test
                 "};"
             };
 
-            RuleBlock<TokenType> processingRules = new RuleBlock<TokenType>()
+            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
             {
                 new CodeBlock<TokenType>()
                     + LanguageSyntax.DeclareObject
@@ -73,7 +73,7 @@ namespace Toolbox.Language.Test
                 "};"
             };
 
-            RuleBlock<TokenType> processingRules = new RuleBlock<TokenType>()
+            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
             {
                 new CodeBlock<TokenType>()
                     + LanguageSyntax.DeclareObject
@@ -140,7 +140,7 @@ namespace Toolbox.Language.Test
                 + LanguageSyntax.Equal
                 + LanguageSyntax.Constant;
 
-            RuleBlock<TokenType> processingRules = new RuleBlock<TokenType>()
+            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
             {
                 new CodeBlock<TokenType>()
                     + LanguageSyntax.VariableName

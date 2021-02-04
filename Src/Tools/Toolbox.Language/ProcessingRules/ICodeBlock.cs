@@ -5,7 +5,7 @@ using Toolbox.Language.Parser;
 
 namespace Toolbox.Language.ProcessingRules
 {
-    public interface IRuleBlock<T> : IEnumerable<IGrammar<T>>, IGrammar<T> where T : Enum
+    public interface ICodeBlock<T> : IEnumerable<IGrammar<T>>, IGrammar<T> where T : Enum
     {
         SymbolNode<T>? Build(SymbolParserContext context);
     }

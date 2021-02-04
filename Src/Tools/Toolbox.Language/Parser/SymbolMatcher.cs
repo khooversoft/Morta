@@ -12,7 +12,7 @@ namespace Toolbox.Language.Parser
 {
     public class SymbolMatcher<T> where T : Enum
     {
-        public SymbolNode<T>? Build(SymbolParserContext context, IRuleBlock<T> grammars)
+        public SymbolNode<T>? Build(SymbolParserContext context, ICodeBlock<T> grammars)
         {
             bool passed = false;
             SymbolNode<T> syntaxNode = new SymbolNode<T>();
@@ -37,7 +37,7 @@ namespace Toolbox.Language.Parser
                             syntaxNode.Add(grammar.CreateToken());
                             break;
 
-                        case IRuleBlock<T> ruleBlock:
+                        case ICodeBlock<T> ruleBlock:
                             context.InputTokens.Cursor--;
 
                             SymbolNode<T>? result = ruleBlock.Build(context);

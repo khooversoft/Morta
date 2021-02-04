@@ -40,7 +40,7 @@ namespace PropertyCompiler.sdk.Expressions
             + Symbols.Equal
             + Symbols.Constant;
 
-        private static readonly RuleBlock<SymbolType> _processingRules = new RuleBlock<SymbolType>()
+        private static readonly CodeBlock<SymbolType> _processingRules = new CodeBlock<SymbolType>()
         {
             new CodeBlock<SymbolType>()
                 + Symbols.VariableName

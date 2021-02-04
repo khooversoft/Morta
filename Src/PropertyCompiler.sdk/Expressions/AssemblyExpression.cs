@@ -20,7 +20,7 @@ namespace PropertyCompiler.sdk.Expressions
     /// 
     public class AssemblyExpressionBuilder : IExpressionBuilder
     {
-        private static readonly RuleBlock<SymbolType> _processingRules = new RuleBlock<SymbolType>()
+        private static readonly CodeBlock<SymbolType> _processingRules = new CodeBlock<SymbolType>()
         {
             new CodeBlock<SymbolType>()
                 + Symbols.Assembly
@@ -28,7 +28,7 @@ namespace PropertyCompiler.sdk.Expressions
                 + Symbols.SemiColon
         };
 
-        public RuleBlock<SymbolType> ProcessingRules => _processingRules;
+        public CodeBlock<SymbolType> ProcessingRules => _processingRules;
 
         public SyntaxNode? Create(SyntaxTree syntaxTree)
         {

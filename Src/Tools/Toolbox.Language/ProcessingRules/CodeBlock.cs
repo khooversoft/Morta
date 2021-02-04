@@ -10,7 +10,7 @@ using Toolbox.Tools;
 
 namespace Toolbox.Language.ProcessingRules
 {
-    public class CodeBlock<T> : List<IGrammar<T>>, IRuleBlock<T> where T : Enum
+    public class CodeBlock<T> : List<IGrammar<T>>, ICodeBlock<T> where T : Enum
     {
         public IReadOnlyList<IGrammarToken<T>> GetGrammars() => this.Flatten<IGrammar<T>>().OfType<IGrammarToken<T>>().ToList();
 
@@ -22,7 +22,7 @@ namespace Toolbox.Language.ProcessingRules
             return left;
         }
 
-        public static CodeBlock<T> operator +(CodeBlock<T> left, IEnumerable<IRuleBlock<T>> right)
+        public static CodeBlock<T> operator +(CodeBlock<T> left, IEnumerable<ICodeBlock<T>> right)
         {
             left.VerifyNotNull(nameof(left));
             right.VerifyNotNull(nameof(right));

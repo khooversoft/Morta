@@ -10,7 +10,7 @@ using Toolbox.Tools;
 
 namespace Toolbox.Language.ProcessingRules
 {
-    public class Reference<T> : IRuleBlock<T> where T : Enum
+    public class Reference<T> : ICodeBlock<T> where T : Enum
     {
         private CodeBlock<T>? _codeBlock;
 
@@ -23,7 +23,7 @@ namespace Toolbox.Language.ProcessingRules
 
         public void Set(CodeBlock<T> codeBlock) => _codeBlock = codeBlock;
 
-        public IEnumerator<IGrammar<T>> GetEnumerator() => Enumerable.Empty<IRuleBlock<T>>().GetEnumerator();
+        public IEnumerator<IGrammar<T>> GetEnumerator() => Enumerable.Empty<ICodeBlock<T>>().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

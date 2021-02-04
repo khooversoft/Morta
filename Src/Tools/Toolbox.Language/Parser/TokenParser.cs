@@ -16,7 +16,7 @@ namespace Toolbox.Language.Parser
     {
         private readonly StringTokenizer _tokenizer;
 
-        public TokenParser(RuleBlock<T> productionRules)
+        public TokenParser(CodeBlock<T> productionRules)
         {
             productionRules.VerifyNotNull(nameof(productionRules));
 
