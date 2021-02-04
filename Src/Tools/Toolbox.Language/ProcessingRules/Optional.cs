@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Language.Grammar;
 using Toolbox.Language.Parser;
-using Toolbox.Language.ProcessingRules;
 
-namespace Toolbox.Parser
+namespace Toolbox.Language.ProcessingRules
 {
     public class Optional<T> : List<IGrammar<T>>, IRuleBlock<T> where T : Enum
     {

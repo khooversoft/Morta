@@ -67,7 +67,11 @@ address = {
     street = "One street",
     city = "City",
     State = "state",
-    Zip = "zipCode"
+    Zip = "zipCode",
+    Contact = {
+        cellPhone = "206-555-1212",
+        workPhone = "303-555-5453",
+    }
 }
 
 profile = {

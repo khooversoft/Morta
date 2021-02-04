@@ -5,23 +5,29 @@ using System.Text;
 using Toolbox.Extensions;
 using Toolbox.Language.Grammar;
 using Toolbox.Language.Parser;
-using Toolbox.Language.ProcessingRules;
 using Toolbox.Tokenizer.Token;
 using Toolbox.Tools;
 
-namespace Toolbox.Parser
+namespace Toolbox.Language.ProcessingRules
 {
     public class CodeBlock<T> : List<IGrammar<T>>, IRuleBlock<T> where T : Enum
     {
-        public CodeBlock()
-        {
-        }
+        public IReadOnlyList<IGrammarToken<T>> GetGrammars() => this.Flatten<IGrammar<T>>().OfType<IGrammarToken<T>>().ToList();
 
         public SymbolNode<T>? Build(SymbolParserContext context) => new SymbolMatcher<T>().Build(context, this);
 
         public static CodeBlock<T> operator +(CodeBlock<T> left, IGrammar<T> right)
         {
             left.Add(right);
+            return left;
+        }
+
+        public static CodeBlock<T> operator +(CodeBlock<T> left, IEnumerable<IRuleBlock<T>> right)
+        {
+            left.VerifyNotNull(nameof(left));
+            right.VerifyNotNull(nameof(right));
+
+            right.ForEach(x => left.Add(x));
             return left;
         }
     }

@@ -1,30 +1,36 @@
-﻿//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Toolbox.Language.Grammar;
+using Toolbox.Language.Parser;
 
-//namespace Toolbox.Parser
-//{
-//    public class Choice : CollectionBase<INode>, INode
-//    {
-//        public Choice(string name = null)
-//        {
-//            Name = name;
-//        }
+namespace Toolbox.Language.ProcessingRules
+{
+    public class Choice<T> : List<IGrammar<T>>, IRuleBlock<T> where T : Enum
+    {
+        public SymbolNode<T>? Build(SymbolParserContext context)
+        {
+            var matcher = new SymbolMatcher<T>();
 
-//        public string Name { get; }
+            foreach (var item in this)
+            {
+                var ruleNode = new CodeBlock<T>() + item;
+                SymbolNode<T>? result = matcher.Build(context, ruleNode);
+                if (result != null) return result;
+            }
 
-//        public override string ToString()
-//        {
-//            return $"{nameof(Choice)}, Count={Count}, Children=({this.ToDelimitedString()})";
-//        }
+            return default;
+        }
 
-//        public static Choice operator +(Choice rootNode, INode nodeToAdd)
-//        {
-//            rootNode.Add(nodeToAdd);
-//            return rootNode;
-//        }
-//    }
-//}
+        public override string ToString() => $"{nameof(Repeat<T>)}, Count={Count}";
+
+        public static Choice<T> operator +(Choice<T> left, IGrammar<T> right)
+        {
+            left.Add(right);
+            return left;
+        }
+    }
+}

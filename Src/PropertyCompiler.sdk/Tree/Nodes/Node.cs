@@ -6,6 +6,6 @@ namespace PropertyCompiler.sdk.Tree.Nodes
 {
     public class Node : NodeBase, INode
     {
-        public string Name { get; init; }
+        public string Name { get; init; } = null!;
     }
 }

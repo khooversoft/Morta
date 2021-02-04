@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Language.Grammar;
-using Toolbox.Parser;
+using Toolbox.Language.ProcessingRules;
 using Toolbox.Tokenizer;
 using Toolbox.Tokenizer.Token;
 using Toolbox.Tools;

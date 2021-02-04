@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Language.Parser;
-using Toolbox.Parser;
+using Toolbox.Language.ProcessingRules;
 using Toolbox.Tokenizer.Token;
 using Toolbox.Tools;
 

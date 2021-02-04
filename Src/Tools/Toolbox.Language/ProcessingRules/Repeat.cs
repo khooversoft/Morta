@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Language.Grammar;
 using Toolbox.Language.Parser;
-using Toolbox.Language.ProcessingRules;
 using Toolbox.Tokenizer.Token;
 
-namespace Toolbox.Parser
+namespace Toolbox.Language.ProcessingRules
 {
     public class Repeat<T> : List<IGrammar<T>>, IRuleBlock<T> where T : Enum
     {

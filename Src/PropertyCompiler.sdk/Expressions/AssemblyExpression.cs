@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Language.Parser;
-using Toolbox.Parser;
+using Toolbox.Language.ProcessingRules;
 using Toolbox.Tools;
 
 namespace PropertyCompiler.sdk.Expressions
