@@ -9,8 +9,4 @@
     <ProjectReference Include="..\Toolbox\Toolbox.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>

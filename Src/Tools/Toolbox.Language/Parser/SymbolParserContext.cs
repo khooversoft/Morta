@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,15 @@ namespace Toolbox.Language.Parser
 {
     public class SymbolParserContext
     {
-        public SymbolParserContext(IEnumerable<IToken> tokens, Action<string> logger)
+        public SymbolParserContext(IEnumerable<IToken> tokens)
         {
             tokens.VerifyNotNull(nameof(tokens));
-            logger.VerifyNotNull(nameof(logger));
 
             InputTokens = new CursorList<IToken>(tokens);
-            Logger = logger;
         }
 
         public CursorList<IToken> InputTokens { get; }
 
-        public Action<string> Logger { get; }
+        public Stack<List<ISymbolToken>> DebugStack { get; } = new Stack<List<ISymbolToken>>();
     }
 }

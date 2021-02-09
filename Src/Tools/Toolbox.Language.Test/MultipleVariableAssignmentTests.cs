@@ -88,10 +88,10 @@ namespace Toolbox.Language.Test
 
             processingRulesReference.Set(processingRules);
 
-            var parser = new SymbolParser<TokenType>(processingRules, x => dump.Add(x));
+            var parser = new SymbolParser<TokenType>(processingRules);
 
-            SymbolNode<TokenType>? syntaxNode = parser.Parse(commands);
-            syntaxNode.Should().NotBeNull();
+            SymbolParserResponse<TokenType> response = parser.Parse(commands);
+            response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
@@ -132,7 +132,7 @@ namespace Toolbox.Language.Test
                 new SymbolToken<TokenType>(TokenType.RightBrace),
             };
 
-            Enumerable.SequenceEqual(syntaxNode!, matchList).Should().BeTrue();
+            Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
         }
     }
 }

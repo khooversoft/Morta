@@ -39,10 +39,10 @@ namespace Toolbox.Language.Test
                     + LanguageSyntax.SemiColon
             };
 
-            var parser = new SymbolParser<TokenType>(processingRules, x => dump.Add(x));
+            var parser = new SymbolParser<TokenType>(processingRules);
 
-            SymbolNode<TokenType>? syntaxNode = parser.Parse(commands);
-            syntaxNode.Should().NotBeNull();
+            SymbolParserResponse<TokenType> response = parser.Parse(commands);
+            response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
@@ -57,14 +57,12 @@ namespace Toolbox.Language.Test
                 new SymbolToken<TokenType>(TokenType.SemiColon),
             };
 
-            Enumerable.SequenceEqual(syntaxNode!, matchList).Should().BeTrue();
+            Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
         }
 
         [Fact]
         public void MultipleDeclareVariableProperties_ShouldPass()
         {
-            List<string> dump = new List<string>();
-
             var commands = new[]
             {
                 "declare objectName = {",
@@ -97,10 +95,10 @@ namespace Toolbox.Language.Test
                     + LanguageSyntax.SemiColon
             };
 
-            var parser = new SymbolParser<TokenType>(processingRules, x => dump.Add(x));
+            var parser = new SymbolParser<TokenType>(processingRules);
 
-            SymbolNode<TokenType>? syntaxNode = parser.Parse(commands);
-            syntaxNode.Should().NotBeNull();
+            SymbolParserResponse<TokenType> response = parser.Parse(commands);
+            response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
@@ -119,7 +117,7 @@ namespace Toolbox.Language.Test
                 new SymbolToken<TokenType>(TokenType.SemiColon),
             };
 
-            Enumerable.SequenceEqual(syntaxNode!, matchList).Should().BeTrue();
+            Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
         }
 
         [Fact]
@@ -159,10 +157,10 @@ namespace Toolbox.Language.Test
                     + LanguageSyntax.SemiColon
             };
 
-            var parser = new SymbolParser<TokenType>(processingRules, x => dump.Add(x));
+            var parser = new SymbolParser<TokenType>(processingRules);
 
-            SymbolNode<TokenType>? syntaxNode = parser.Parse(commands);
-            syntaxNode.Should().NotBeNull();
+            SymbolParserResponse<TokenType> syntaxNode = parser.Parse(commands);
+            syntaxNode.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
@@ -180,7 +178,7 @@ namespace Toolbox.Language.Test
                 new SymbolToken<TokenType>(TokenType.SemiColon),
             };
 
-            Enumerable.SequenceEqual(syntaxNode!, matchList).Should().BeTrue();
+            Enumerable.SequenceEqual(syntaxNode.Nodes!, matchList).Should().BeTrue();
         }
     }
 }

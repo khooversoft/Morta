@@ -16,6 +16,8 @@ namespace Toolbox.Language.ProcessingRules
 
         public SymbolNode<T>? Build(SymbolParserContext context) => new SymbolMatcher<T>().Build(context, this);
 
+        public override string ToString() => $"{nameof(CodeBlock<T>)}, Count={Count}";
+
         public static CodeBlock<T> operator +(CodeBlock<T> left, IGrammar<T> right)
         {
             left.Add(right);

@@ -27,6 +27,6 @@ namespace Toolbox.Language.Parser
 
         public override int GetHashCode() => GrammarType.GetHashCode();
 
-        public override string ToString() => $"{nameof(SymbolToken<T>)}: Grammar Type:{GrammarType}";
+        public override string ToString() => $"{nameof(SymbolToken<T>)}: Grammar Type:{GrammarType}, Flags={Flags}";
     }
 }

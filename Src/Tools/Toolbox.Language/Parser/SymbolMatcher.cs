@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,18 +24,19 @@ namespace Toolbox.Language.Parser
             {
                 foreach (IGrammar<T> item in grammars)
                 {
-                    if (!context.InputTokens.TryNext(out IToken? token)) return DumpSyntaxNode("End of input tokens");
+                    if (!context.InputTokens.TryNext(out IToken? token)) return PushToDebugStack("Out of input tokens");
 
                     switch (item)
                     {
                         case IExpression<T> expression:
-                            if (token.TokenType != TokenType.Data) return DumpSyntaxNode($"ERR: not expression, expression={expression}");
+                            if (token.TokenType != TokenType.Data) return PushToDebugStack($"{expression} is not TokenType.Data");
 
                             syntaxNode.Add(expression.CreateToken(token.Value));
                             break;
 
                         case IGrammarToken<T> grammar:
-                            if( token.Value != grammar.Match) return DumpSyntaxNode($"ERR: value does not match, value={token.Value}, expression={grammar}");
+                            if (token.Value != grammar.Match) return PushToDebugStack($"{grammar} does not match token={token.Value}");
+
                             syntaxNode.Add(grammar.CreateToken());
                             break;
 
@@ -42,7 +44,7 @@ namespace Toolbox.Language.Parser
                             context.InputTokens.Cursor--;
 
                             SymbolNode<T>? result = ruleBlock.Build(context);
-                            if (result == null) return DumpSyntaxNode($"ERR: Rule block failed, ruleBlock={ruleBlock}");
+                            if (result == null) return PushToDebugStack("Rule block returned empty");
 
                             syntaxNode += result;
                             break;
@@ -64,17 +66,13 @@ namespace Toolbox.Language.Parser
 
             return new SymbolNode<T>() + syntaxNode;
 
-            SymbolNode<T>? DumpSyntaxNode(string reason)
+            SymbolNode<T>? PushToDebugStack(string reason)
             {
-                syntaxNode
-                    .Select(x => x.ToString() ?? "<none>")
-                    .Prepend("Failed to match")
-                    .Append($"Failed because of {reason}")
-                    .ForEach(x => context.Logger(x));
+                syntaxNode.Add(new MessageTrivia { Message = reason });
 
+                context.DebugStack.Push(syntaxNode);
                 return null;
             }
-
         }
     }
 }

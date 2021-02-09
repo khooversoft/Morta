@@ -17,10 +17,10 @@ address = {
 
 profile = {
     firstName = firstName,
-    fullName = fullName {
+    fullName = fullName with {
         middleInitial = "M"
     },
-    address = address {
+    address = address with {
         zipCode = "98033"
     }
 }

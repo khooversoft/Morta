@@ -35,10 +35,10 @@ namespace Toolbox.Language.Test
 
                 + LanguageSyntax.SemiColon;
 
-            var parser = new SymbolParser<TokenType>(processingRules, x => { });
+            var parser = new SymbolParser<TokenType>(processingRules);
 
-            SymbolNode<TokenType>? syntaxNode = parser.Parse(command);
-            syntaxNode.Should().NotBeNull();
+            SymbolParserResponse<TokenType> syntaxNode = parser.Parse(command);
+            syntaxNode.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
@@ -48,7 +48,7 @@ namespace Toolbox.Language.Test
                 new SymbolToken<TokenType>(TokenType.SemiColon),
             };
 
-            Enumerable.SequenceEqual(syntaxNode!, matchList).Should().BeTrue();
+            Enumerable.SequenceEqual(syntaxNode.Nodes!, matchList).Should().BeTrue();
         }
 
         [Fact]
@@ -74,10 +74,10 @@ namespace Toolbox.Language.Test
 
                 + LanguageSyntax.SemiColon;
 
-            var parser = new SymbolParser<TokenType>(processingRules, x => { });
+            var parser = new SymbolParser<TokenType>(processingRules);
 
-            SymbolNode<TokenType>? syntaxNode = parser.Parse(command);
-            syntaxNode.Should().NotBeNull();
+            SymbolParserResponse<TokenType> response = parser.Parse(command);
+            response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
@@ -87,7 +87,7 @@ namespace Toolbox.Language.Test
                 new SymbolToken<TokenType>(TokenType.SemiColon),
             };
 
-            Enumerable.SequenceEqual(syntaxNode!, matchList).Should().BeTrue();
+            Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
         }
     }
 }

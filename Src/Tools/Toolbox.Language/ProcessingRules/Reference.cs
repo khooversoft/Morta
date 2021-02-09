@@ -23,6 +23,9 @@ namespace Toolbox.Language.ProcessingRules
 
         public void Set(CodeBlock<T> codeBlock) => _codeBlock = codeBlock;
 
+        public override string ToString() => $"{nameof(Reference<T>)}, {_codeBlock?.ToString() ?? "<not set>"}";
+
+
         public IEnumerator<IGrammar<T>> GetEnumerator() => Enumerable.Empty<ICodeBlock<T>>().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

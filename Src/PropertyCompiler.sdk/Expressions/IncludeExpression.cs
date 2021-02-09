@@ -32,12 +32,12 @@ namespace PropertyCompiler.sdk.Expressions
 
         public SyntaxNode? Create(SyntaxTree syntaxTree)
         {
-            SymbolNode<SymbolType>? symbolParser = new SymbolParser<SymbolType>(_processingRules)
+            SymbolParserResponse<SymbolType> symbolParser = new SymbolParser<SymbolType>(_processingRules)
                 .Parse(syntaxTree.SymbolParserContext);
 
-            if (symbolParser == null) return null;
+            if (symbolParser.Nodes == null) return null;
 
-            var stack = new Stack<ISymbolToken>(symbolParser.Reverse<ISymbolToken>());
+            var stack = new Stack<ISymbolToken>(symbolParser.Nodes.Reverse<ISymbolToken>());
 
             string includePath = stack.GetNextValue().Value;
 

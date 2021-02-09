@@ -25,7 +25,7 @@ namespace Toolbox.Language.ProcessingRules
             return default;
         }
 
-        public override string ToString() => $"{nameof(Repeat<T>)}, Count={Count}";
+        public override string ToString() => $"{nameof(Choice<T>)}, Count={Count}";
 
         public static Choice<T> operator +(Choice<T> left, IGrammar<T> right)
         {

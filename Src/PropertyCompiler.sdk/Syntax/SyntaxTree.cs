@@ -8,10 +8,9 @@ namespace PropertyCompiler.sdk.Syntax
 {
     public class SyntaxTree
     {
-        public SyntaxTree(SymbolParserContext symbolParserContext, IEnumerable<IExpressionBuilder> expressionBuilders, Action<string> logger)
+        public SyntaxTree(SymbolParserContext symbolParserContext, IEnumerable<IExpressionBuilder> expressionBuilders)
         {
             symbolParserContext.VerifyNotNull(nameof(symbolParserContext));
-            logger.VerifyNotNull(nameof(logger));
 
             expressionBuilders
                 .VerifyNotNull(nameof(expressionBuilders))
@@ -19,12 +18,9 @@ namespace PropertyCompiler.sdk.Syntax
 
             ExpressionBuilders = expressionBuilders.ToList();
             SymbolParserContext = symbolParserContext;
-            Logger = logger;
         }
 
         public IReadOnlyList<IExpressionBuilder> ExpressionBuilders { get; }
-
-        public Action<string> Logger { get; }
 
         public SymbolParserContext SymbolParserContext { get; }
     }

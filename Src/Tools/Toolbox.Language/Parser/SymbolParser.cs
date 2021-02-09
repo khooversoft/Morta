@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,63 +16,35 @@ namespace Toolbox.Language.Parser
     public class SymbolParser<T> where T : Enum
     {
         private readonly CodeBlock<T> _productionRules;
-        private readonly Action<string> _logger;
         private readonly TokenParser<T> _tokenizer;
 
-        public SymbolParser(CodeBlock<T> productionRules, Action<string>? logger = null)
+        public SymbolParser(CodeBlock<T> productionRules)
         {
             productionRules.VerifyNotNull(nameof(productionRules));
 
             _productionRules = productionRules;
-            _logger = logger ?? (x => { });
             _tokenizer = new TokenParser<T>(_productionRules);
         }
 
-        public SymbolNode<T>? Parse(params string[] rawLines)
+        public SymbolParserResponse<T> Parse(params string[] rawLines)
         {
             string rawData = rawLines.Aggregate(string.Empty, (a, x) => a += x);
 
             IReadOnlyList<IToken> tokens = _tokenizer.Parse(rawData);
-            if (tokens.Count == 0) return null;
+            if (tokens.Count == 0) return new SymbolParserResponse<T>();
 
-            return Parse(new SymbolParserContext(tokens, _logger));
+            return Parse(new SymbolParserContext(tokens));
         }
 
-        public SymbolNode<T>? Parse(SymbolParserContext context)
+        public SymbolParserResponse<T> Parse(SymbolParserContext context)
         {
-            return new SymbolMatcher<T>().Build(context, _productionRules);
+            SymbolNode<T>? result = new SymbolMatcher<T>().Build(context, _productionRules);
 
-            //var allSyntaxNode = new SymbolNode<T>();
-
-            //foreach (IGrammar<T> rule in _productionRules)
-            //{
-            //    SymbolNode<T>? syntaxNode;
-
-            //    switch (rule)
-            //    {
-            //        case ICodeBlock<T> codeBlock:
-            //            syntaxNode = codeBlock.Build(context);
-            //            break;
-
-            //        case IGrammar<T> grammer:
-            //            var grammerCodeBlock = new CodeBlock<T>() + grammer;
-            //            syntaxNode = grammerCodeBlock.Build(context);
-            //            break;
-
-            //        default:
-            //            throw new ArgumentException($"Unknown rule {rule.GetType().FullName}");
-            //    }
-
-            //    if (syntaxNode == null) return null;
-            //    allSyntaxNode += syntaxNode;
-
-            //    //SymbolNode<T>? syntaxNode = rule.Build(context);
-            //    //if (syntaxNode == null) return null;
-
-            //    //allSyntaxNode += syntaxNode;
-            //}
-
-            //return allSyntaxNode;
+            return new SymbolParserResponse<T>
+            {
+                Nodes = result,
+                DebugStack = context.DebugStack.ToList(),
+            };
         }
     }
 }
