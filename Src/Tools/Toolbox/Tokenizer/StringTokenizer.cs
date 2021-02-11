@@ -109,15 +109,17 @@ namespace Toolbox.Tokenizer
 
                     if (dataStart != null)
                     {
+                        int length = index - (int)dataStart;
+
                         string dataValue = span
-                            .Slice((int)dataStart, index - (int)dataStart)
+                            .Slice((int)dataStart, length)
                             .ToString();
 
-                        tokenList.Add(new TokenValue(dataValue, TokenType.Data));
+                        tokenList.Add(new TokenValue(dataValue, TokenType.Data, new TextSpan((int)dataStart, length)));
                         dataStart = null;
                     }
 
-                    tokenList.Add(syntaxRules[syntaxIndex].CreateToken(span.Slice(index, (int)matchLength)));
+                    tokenList.Add(syntaxRules[syntaxIndex].CreateToken(span.Slice(index, (int)matchLength), new TextSpan(index, (int)matchLength)));
                     break;
                 }
 
@@ -132,11 +134,13 @@ namespace Toolbox.Tokenizer
 
             if (dataStart != null)
             {
+                int length = span.Length - (int)dataStart;
+
                 string dataValue = span
-                    .Slice((int)dataStart, span.Length - (int)dataStart)
+                    .Slice((int)dataStart, length)
                     .ToString();
 
-                tokenList.Add(new TokenValue(dataValue, TokenType.Data));
+                tokenList.Add(new TokenValue(dataValue, TokenType.Data, new TextSpan((int)dataStart, length)));
             }
 
             return tokenList;

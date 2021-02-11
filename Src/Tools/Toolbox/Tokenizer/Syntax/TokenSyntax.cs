@@ -31,10 +31,10 @@ namespace Toolbox.Tokenizer.Syntax
             return null;
         }
 
-        public IToken CreateToken(ReadOnlySpan<char> span)
+        public IToken CreateToken(ReadOnlySpan<char> span, TextSpan textSpan)
         {
             string value = span.ToString();
-            return new TokenValue(value, TokenType.ParseToken);
+            return new TokenValue(value, TokenType.ParseToken, textSpan);
         }
     }
 }

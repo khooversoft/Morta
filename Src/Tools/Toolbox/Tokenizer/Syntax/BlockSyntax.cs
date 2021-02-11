@@ -49,10 +49,10 @@ namespace Toolbox.Tokenizer.Syntax
             throw new ArgumentException("Missing ending quote");
         }
 
-        public IToken CreateToken(ReadOnlySpan<char> span)
+        public IToken CreateToken(ReadOnlySpan<char> span, TextSpan textSpan)
         {
             string value = span.ToString();
-            return new BlockToken(value);
+            return new BlockToken(value, textSpan);
         }
     }
 }

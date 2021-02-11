@@ -45,16 +45,17 @@ namespace Toolbox.Test
 
             var expectedTokens = new IToken[]
             {
-                new TokenValue("abc", TokenType.Data),
-                new TokenValue(" ", TokenType.ParseToken),
-                new TokenValue("def", TokenType.Data),
+                new TokenValue("abc", TokenType.Data, new TextSpan(0, 3)),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(3, 1)),
+                new TokenValue("def", TokenType.Data, new TextSpan(4, 3)),
             };
 
             tokens.Count.Should().Be(expectedTokens.Length);
 
             tokens
                 .Zip(expectedTokens, (o, i) => (o, i))
-                .All(x => x.o.Value == x.i.Value)
+                .All(x => x.o.Equals(x.i))
+                //.All(x => x.o.Value == x.i.Value)
                 .Should().BeTrue();
         }
 
@@ -69,18 +70,18 @@ namespace Toolbox.Test
 
             var expectedTokens = new IToken[]
             {
-                new TokenValue(" ", TokenType.ParseToken),
-                new TokenValue("abc", TokenType.Data),
-                new TokenValue(" ", TokenType.ParseToken),
-                new TokenValue("def", TokenType.Data),
-                new TokenValue(" ", TokenType.ParseToken),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(0, 2)),
+                new TokenValue("abc", TokenType.Data, new TextSpan(2, 3)),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(5, 3)),
+                new TokenValue("def", TokenType.Data, new TextSpan(8, 3)),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(11, 2)),
             };
 
             tokens.Count.Should().Be(expectedTokens.Length);
 
             tokens
                 .Zip(expectedTokens, (o, i) => (o, i))
-                .All(x => x.o.Value == x.i.Value)
+                .All(x => x.o.Equals(x.i))
                 .Should().BeTrue();
         }
 
@@ -96,20 +97,20 @@ namespace Toolbox.Test
 
             var expectedTokens = new IToken[]
             {
-                new TokenValue(" ", TokenType.ParseToken),
-                new TokenValue("abc", TokenType.Data),
-                new TokenValue(" ", TokenType.ParseToken),
-                new TokenValue("[", TokenType.ParseToken),
-                new TokenValue("def", TokenType.Data),
-                new TokenValue("]", TokenType.ParseToken),
-                new TokenValue(" ", TokenType.ParseToken),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(0, 2)),
+                new TokenValue("abc", TokenType.Data, new TextSpan(2, 3)),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(5, 3)),
+                new TokenValue("[", TokenType.ParseToken, new TextSpan(8, 1)),
+                new TokenValue("def", TokenType.Data, new TextSpan(9, 3)),
+                new TokenValue("]", TokenType.ParseToken, new TextSpan(12, 1)),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(13, 2)),
             };
 
             tokens.Count.Should().Be(expectedTokens.Length);
 
             tokens
                 .Zip(expectedTokens, (o, i) => (o, i))
-                .All(x => x.o.Value == x.i.Value)
+                .All(x => x.o.Equals(x.i))
                 .Should().BeTrue();
         }
 
@@ -122,18 +123,18 @@ namespace Toolbox.Test
 
             var expectedTokens = new IToken[]
             {
-                new TokenValue("Escape ", TokenType.Data),
-                new TokenValue("{{", TokenType.ParseToken),
-                new TokenValue("firstName", TokenType.Data),
-                new TokenValue("}}", TokenType.ParseToken),
-                new TokenValue(" end", TokenType.Data),
+                new TokenValue("Escape ", TokenType.Data, new TextSpan(0, 7)),
+                new TokenValue("{{", TokenType.ParseToken, new TextSpan(7, 2)),
+                new TokenValue("firstName", TokenType.Data, new TextSpan(9, 9)),
+                new TokenValue("}}", TokenType.ParseToken, new TextSpan(18, 2)),
+                new TokenValue(" end", TokenType.Data, new TextSpan(20, 4)),
             };
 
             tokens.Count.Should().Be(expectedTokens.Length);
 
             tokens
                 .Zip(expectedTokens, (o, i) => (o, i))
-                .All(x => x.o.Value == x.i.Value)
+                .All(x => x.o.Equals(x.i))
                 .Should().BeTrue();
         }
     }

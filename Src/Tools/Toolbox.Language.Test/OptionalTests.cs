@@ -1,9 +1,5 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Language.Parser;
 using Toolbox.Language.ProcessingRules;
 using Xunit;
@@ -17,32 +13,32 @@ namespace Toolbox.Language.Test
         {
             string command = "name = value;";
 
-            var assignment = new CodeBlock<TokenType>()
+            var assignment = new CodeBlock<TestTokenType>()
                 + LanguageSyntax.VariableName
                 + LanguageSyntax.Equal
                 + LanguageSyntax.Constant;
 
-            var processingRules = new CodeBlock<TokenType>()
+            var processingRules = new CodeBlock<TestTokenType>()
                 + assignment
 
-                + (new Optional<TokenType>()
+                + (new Optional<TestTokenType>()
                     + LanguageSyntax.Comma
                     + assignment
                 )
 
                 + LanguageSyntax.SemiColon;
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> response = parser.Parse(command);
+            SymbolParserResponse<TestTokenType> response = parser.Parse(command);
             response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
-                new SymbolValue<TokenType>(TokenType.VariableName, "name"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "value"),
-                new SymbolToken<TokenType>(TokenType.SemiColon),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "name"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "value"),
+                new SymbolToken<TestTokenType>(TestTokenType.SemiColon),
             };
 
             Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
@@ -53,39 +49,39 @@ namespace Toolbox.Language.Test
         {
             string command = "name = value,name1=value2;";
 
-            var assignment = new CodeBlock<TokenType>()
+            var assignment = new CodeBlock<TestTokenType>()
                 + LanguageSyntax.VariableName
                 + LanguageSyntax.Equal
                 + LanguageSyntax.Constant;
 
-            var processingRules = new CodeBlock<TokenType>()
+            var processingRules = new CodeBlock<TestTokenType>()
                 + assignment
 
-                + (new Optional<TokenType>()
+                + (new Optional<TestTokenType>()
                     + LanguageSyntax.Comma
                     + assignment
                 )
 
                 + LanguageSyntax.SemiColon;
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> response = parser.Parse(command);
+            SymbolParserResponse<TestTokenType> response = parser.Parse(command);
             response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
-                new SymbolValue<TokenType>(TokenType.VariableName, "name"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "value"),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "name"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "value"),
 
-                new SymbolToken<TokenType>(TokenType.Comma),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
 
-                new SymbolValue<TokenType>(TokenType.VariableName, "name1"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "value2"),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "name1"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "value2"),
 
-                new SymbolToken<TokenType>(TokenType.SemiColon),
+                new SymbolToken<TestTokenType>(TestTokenType.SemiColon),
             };
 
             Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
@@ -96,16 +92,16 @@ namespace Toolbox.Language.Test
         {
             string command = "name = value,name1=value1, name2 = value2;";
 
-            var assignment = new CodeBlock<TokenType>()
+            var assignment = new CodeBlock<TestTokenType>()
                 + LanguageSyntax.VariableName
                 + LanguageSyntax.Equal
                 + LanguageSyntax.Constant;
 
-            var processingRules = new CodeBlock<TokenType>()
+            var processingRules = new CodeBlock<TestTokenType>()
                 + assignment
 
-                + (new Optional<TokenType>()
-                    + (new Repeat<TokenType>()
+                + (new Optional<TestTokenType>()
+                    + (new Repeat<TestTokenType>()
                         + LanguageSyntax.Comma
                         + assignment
                     )
@@ -113,30 +109,30 @@ namespace Toolbox.Language.Test
 
                 + LanguageSyntax.SemiColon;
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> response = parser.Parse(command);
+            SymbolParserResponse<TestTokenType> response = parser.Parse(command);
             response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
-                new SymbolValue<TokenType>(TokenType.VariableName, "name"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "value"),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "name"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "value"),
 
-                new SymbolToken<TokenType>(TokenType.Comma),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
 
-                new SymbolValue<TokenType>(TokenType.VariableName, "name1"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "value1"),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "name1"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "value1"),
 
-                new SymbolToken<TokenType>(TokenType.Comma),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
 
-                new SymbolValue<TokenType>(TokenType.VariableName, "name2"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "value2"),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "name2"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "value2"),
 
-                new SymbolToken<TokenType>(TokenType.SemiColon),
+                new SymbolToken<TestTokenType>(TestTokenType.SemiColon),
             };
 
             Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();

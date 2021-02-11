@@ -31,13 +31,13 @@ namespace Toolbox.Language.Parser
                         case IExpression<T> expression:
                             if (token.TokenType != TokenType.Data) return PushToDebugStack($"{expression} is not TokenType.Data");
 
-                            syntaxNode.Add(expression.CreateToken(token.Value));
+                            syntaxNode.Add(expression.CreateToken(token));
                             break;
 
                         case IGrammarToken<T> grammar:
                             if (token.Value != grammar.Match) return PushToDebugStack($"{grammar} does not match token={token.Value}");
 
-                            syntaxNode.Add(grammar.CreateToken());
+                            syntaxNode.Add(grammar.CreateToken(token));
                             break;
 
                         case ICodeBlock<T> ruleBlock:
@@ -64,13 +64,15 @@ namespace Toolbox.Language.Parser
                     context.InputTokens.AbandonSavedCursor();
             }
 
+            context.DebugStack.Add(syntaxNode);
+
             return new SymbolNode<T>() + syntaxNode;
 
             SymbolNode<T>? PushToDebugStack(string reason)
             {
                 syntaxNode.Add(new MessageTrivia { Message = reason });
 
-                context.DebugStack.Push(syntaxNode);
+                context.DebugStack.Add(syntaxNode);
                 return null;
             }
         }

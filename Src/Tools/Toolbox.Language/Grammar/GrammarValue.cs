@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Toolbox.Language.Parser;
+using Toolbox.Tokenizer.Token;
 
 namespace Toolbox.Language.Grammar
 {
@@ -11,7 +12,7 @@ namespace Toolbox.Language.Grammar
 
         public T GrammarType { get; }
 
-        public ISymbolToken CreateToken(string value) => new SymbolValue<T>(GrammarType, value);
+        public ISymbolToken CreateToken(IToken token) => new SymbolValue<T>(GrammarType, token);
 
         public override string ToString() => $"{nameof(GrammarValue<T>)}: {GrammarType}";
     }

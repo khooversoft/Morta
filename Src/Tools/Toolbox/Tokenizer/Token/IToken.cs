@@ -12,5 +12,7 @@ namespace Toolbox.Tokenizer.Token
         TokenType TokenType { get; }
 
         string Value { get; }
+
+        TextSpan TextSpan { get; }
     }
 }

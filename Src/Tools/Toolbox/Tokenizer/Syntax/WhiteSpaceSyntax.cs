@@ -11,7 +11,7 @@ namespace Toolbox.Tokenizer.Syntax
     {
         public int Priority { get; }
 
-        public IToken CreateToken(ReadOnlySpan<char> span) => new TokenValue(" ", TokenType.ParseToken);
+        public IToken CreateToken(ReadOnlySpan<char> span, TextSpan textSpan) => new TokenValue(" ", TokenType.ParseToken, textSpan);
 
         public int? Match(ReadOnlySpan<char> span)
         {

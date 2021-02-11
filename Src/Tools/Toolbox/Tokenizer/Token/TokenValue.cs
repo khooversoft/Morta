@@ -7,26 +7,34 @@ namespace Toolbox.Tokenizer.Token
     /// <summary>
     /// Token value extracted from data
     /// </summary>
-    public struct TokenValue : IToken
+    public struct TokenValue : IToken, IEquatable<TokenValue>
     {
-        public TokenValue(string value, TokenType tokenType)
+        public TokenValue(string value, TokenType tokenType, TextSpan textSpan)
         {
             TokenType = tokenType;
+            TextSpan = textSpan;
             Value = value;
         }
 
         public TokenType TokenType { get; }
 
+        public TextSpan TextSpan { get; }
+
         public string Value { get; }
 
-        public override bool Equals(object? obj) => obj is TokenValue value && Value == value.Value;
+        public override string ToString() => $"TokenType={TokenType}, TextSpan={TextSpan}, Value={Value}";
 
-        public override int GetHashCode() => HashCode.Combine(Value);
+        public override bool Equals(object? obj) => obj is TokenValue value && Equals(value);
 
-        public override string ToString() => Value;
+        public bool Equals(TokenValue other) =>
+            TokenType == other.TokenType &&
+            TextSpan.Equals(other.TextSpan) &&
+            Value == other.Value;
 
-        public static bool operator !=(TokenValue left, TokenValue right) => !(left == right);
+        public override int GetHashCode() => HashCode.Combine(TokenType, TextSpan, Value);
 
         public static bool operator ==(TokenValue left, TokenValue right) => left.Equals(right);
+
+        public static bool operator !=(TokenValue left, TokenValue right) => !(left == right);
     }
 }

@@ -21,6 +21,6 @@ namespace Toolbox.Language.Parser
 
         public CursorList<IToken> InputTokens { get; }
 
-        public Stack<List<ISymbolToken>> DebugStack { get; } = new Stack<List<ISymbolToken>>();
+        public List<List<ISymbolToken>> DebugStack { get; } = new List<List<ISymbolToken>>();
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Language.Parser;
+using Toolbox.Tokenizer.Token;
 using Toolbox.Tools;
 
 namespace Toolbox.Language.Grammar
@@ -25,7 +26,7 @@ namespace Toolbox.Language.Grammar
 
         public GrammarFlags Flags { get; }
 
-        public ISymbolToken CreateToken() => new SymbolToken<T>(GrammarType, Flags);
+        public ISymbolToken CreateToken(IToken token) => new SymbolToken<T>(GrammarType, token, Flags);
 
         public override bool Equals(object? obj)
         {

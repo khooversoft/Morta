@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Toolbox.Language.Parser;
 using Toolbox.Language.ProcessingRules;
@@ -17,14 +15,14 @@ namespace Toolbox.Language.Test
         [InlineData("int ;")]
         public void SimpleVariableDefine_ShouldFail(string command)
         {
-            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
+            CodeBlock<TestTokenType> processingRules = new CodeBlock<TestTokenType>()
             {
-                new CodeBlock<TokenType>() + LanguageSyntax.TypeName + LanguageSyntax.VariableName + LanguageSyntax.SemiColon,
+                new CodeBlock<TestTokenType>() + LanguageSyntax.TypeName + LanguageSyntax.VariableName + LanguageSyntax.SemiColon,
             };
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> syntaxNode = parser.Parse(command);
+            SymbolParserResponse<TestTokenType> syntaxNode = parser.Parse(command);
             syntaxNode.Nodes.Should().BeNull();
         }
 
@@ -33,21 +31,21 @@ namespace Toolbox.Language.Test
         {
             string command = "int i;";
 
-            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
+            CodeBlock<TestTokenType> processingRules = new CodeBlock<TestTokenType>()
             {
-                new CodeBlock<TokenType>() + LanguageSyntax.TypeName + LanguageSyntax.VariableName + LanguageSyntax.SemiColon,
+                new CodeBlock<TestTokenType>() + LanguageSyntax.TypeName + LanguageSyntax.VariableName + LanguageSyntax.SemiColon,
             };
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> reponse = parser.Parse(command);
+            SymbolParserResponse<TestTokenType> reponse = parser.Parse(command);
             reponse.Nodes.Should().NotBeNull();
 
             ISymbolToken[] matchList = new ISymbolToken[]
             {
-                new SymbolValue<TokenType>(TokenType.TypeName, "int"),
-                new SymbolValue<TokenType>(TokenType.VariableName, "i"),
-                new SymbolToken<TokenType>(TokenType.SemiColon),
+                new SymbolValue<TestTokenType>(TestTokenType.TypeName, "int"),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "i"),
+                new SymbolToken<TestTokenType>(TestTokenType.SemiColon),
             };
 
             Enumerable.SequenceEqual(reponse.Nodes!, matchList).Should().BeTrue();
@@ -58,24 +56,24 @@ namespace Toolbox.Language.Test
         {
             string command = "declare objectName =";
 
-            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
+            CodeBlock<TestTokenType> processingRules = new CodeBlock<TestTokenType>()
             {
-                new CodeBlock<TokenType>()
+                new CodeBlock<TestTokenType>()
                     + LanguageSyntax.DeclareObject
                     + LanguageSyntax.VariableName
                     + LanguageSyntax.Equal
             };
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> reponse = parser.Parse(command);
+            SymbolParserResponse<TestTokenType> reponse = parser.Parse(command);
             reponse.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
-                new SymbolToken<TokenType>(TokenType.DeclareObject),
-                new SymbolValue<TokenType>(TokenType.VariableName, "objectName"),
-                new SymbolToken<TokenType>(TokenType.Equal),
+                new SymbolToken<TestTokenType>(TestTokenType.DeclareObject),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "objectName"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
             };
 
             Enumerable.SequenceEqual(reponse.Nodes!, matchList).Should().BeTrue();
@@ -86,24 +84,24 @@ namespace Toolbox.Language.Test
         {
             string command = "declare objectName =; name=value";
 
-            CodeBlock<TokenType> processingRules = new CodeBlock<TokenType>()
+            CodeBlock<TestTokenType> processingRules = new CodeBlock<TestTokenType>()
             {
-                new CodeBlock<TokenType>()
+                new CodeBlock<TestTokenType>()
                     + LanguageSyntax.DeclareObject
                     + LanguageSyntax.VariableName
                     + LanguageSyntax.Equal
             };
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> reponse = parser.Parse(command);
+            SymbolParserResponse<TestTokenType> reponse = parser.Parse(command);
             reponse.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
-                new SymbolToken<TokenType>(TokenType.DeclareObject),
-                new SymbolValue<TokenType>(TokenType.VariableName, "objectName"),
-                new SymbolToken<TokenType>(TokenType.Equal),
+                new SymbolToken<TestTokenType>(TestTokenType.DeclareObject),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "objectName"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
             };
 
             Enumerable.SequenceEqual(reponse.Nodes!, matchList).Should().BeTrue();

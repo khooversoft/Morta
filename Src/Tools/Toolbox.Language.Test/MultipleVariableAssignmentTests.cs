@@ -1,9 +1,6 @@
 ﻿using FluentAssertions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Language.Parser;
 using Toolbox.Language.ProcessingRules;
 using Xunit;
@@ -33,36 +30,35 @@ namespace Toolbox.Language.Test
                 "};"
             };
 
-            var propertyValueAssignment = new CodeBlock<TokenType>()
+            var propertyValueAssignment = new CodeBlock<TestTokenType>()
                 + LanguageSyntax.VariableName
                 + LanguageSyntax.Equal
                 + LanguageSyntax.Constant;
 
-            var propertyObjectAssignment = new CodeBlock<TokenType>()
+            var propertyObjectAssignment = new CodeBlock<TestTokenType>()
                 + LanguageSyntax.VariableName
                 + LanguageSyntax.Equal
                 + LanguageSyntax.LeftBrace;
 
-            var propertyWithAssignment = new CodeBlock<TokenType>()
+            var propertyWithAssignment = new CodeBlock<TestTokenType>()
                 + LanguageSyntax.VariableName
                 + LanguageSyntax.With
                 + LanguageSyntax.LeftBrace;
 
+            var processingRulesReference = new Reference<TestTokenType>();
 
-            var processingRulesReference = new Reference<TokenType>();
-
-            var processingRules = new CodeBlock<TokenType>()
-                + (new Choice<TokenType>()
-                    + (new CodeBlock<TokenType>()
+            var processingRules = new CodeBlock<TestTokenType>()
+                + (new Choice<TestTokenType>()
+                    + (new CodeBlock<TestTokenType>()
                         + propertyValueAssignment   // key = value
                         )
 
-                    + (new CodeBlock<TokenType>()
+                    + (new CodeBlock<TestTokenType>()
                         + propertyObjectAssignment  // key = {
                         + propertyValueAssignment   // key = value
 
-                        + (new Optional<TokenType>()
-                            + (new Repeat<TokenType>()
+                        + (new Optional<TestTokenType>()
+                            + (new Repeat<TestTokenType>()
                                 + LanguageSyntax.Comma   // ,
                                 + processingRulesReference
                                 )
@@ -71,12 +67,12 @@ namespace Toolbox.Language.Test
                         + LanguageSyntax.RightBrace  // }
                     )
 
-                    + (new CodeBlock<TokenType>()
+                    + (new CodeBlock<TestTokenType>()
                         + propertyObjectAssignment   // key with {
                         + propertyWithAssignment     // key = value
 
-                        + (new Optional<TokenType>()
-                            + (new Repeat<TokenType>()
+                        + (new Optional<TestTokenType>()
+                            + (new Repeat<TestTokenType>()
                                 + LanguageSyntax.Comma   // ,
                                 + processingRulesReference
                                 )
@@ -88,48 +84,48 @@ namespace Toolbox.Language.Test
 
             processingRulesReference.Set(processingRules);
 
-            var parser = new SymbolParser<TokenType>(processingRules);
+            var parser = new SymbolParser<TestTokenType>(processingRules);
 
-            SymbolParserResponse<TokenType> response = parser.Parse(commands);
+            SymbolParserResponse<TestTokenType> response = parser.Parse(commands);
             response.Nodes.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
-                new SymbolValue<TokenType>(TokenType.VariableName, "objectName"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolToken<TokenType>(TokenType.LeftBrace),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Name1"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "Value1"),
-                new SymbolToken<TokenType>(TokenType.Comma),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Name2"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "Value2Name3"),
-                new SymbolToken<TokenType>(TokenType.Comma),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Value2"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolToken<TokenType>(TokenType.LeftBrace),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Name4"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "Value4"),
-                new SymbolToken<TokenType>(TokenType.Comma),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Name5"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "Value5"),
-                new SymbolToken<TokenType>(TokenType.RightBrace),
-                new SymbolToken<TokenType>(TokenType.Comma),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Name6"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "Value6"),
-                new SymbolToken<TokenType>(TokenType.Comma),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Name7"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolToken<TokenType>(TokenType.LeftBrace),
-                new SymbolValue<TokenType>(TokenType.VariableName, "Name4"),
-                new SymbolToken<TokenType>(TokenType.Equal),
-                new SymbolValue<TokenType>(TokenType.Constant, "Value4"),
-                new SymbolToken<TokenType>(TokenType.RightBrace),
-                new SymbolToken<TokenType>(TokenType.RightBrace),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "objectName"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolToken<TestTokenType>(TestTokenType.LeftBrace),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name1"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value1"),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name2"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value2Name3"),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Value2"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolToken<TestTokenType>(TestTokenType.LeftBrace),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name4"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value4"),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name5"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value5"),
+                new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name6"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value6"),
+                new SymbolToken<TestTokenType>(TestTokenType.Comma),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name7"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolToken<TestTokenType>(TestTokenType.LeftBrace),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name4"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value4"),
+                new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
+                new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
             };
 
             Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
