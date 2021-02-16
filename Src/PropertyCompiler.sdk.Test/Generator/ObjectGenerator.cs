@@ -12,27 +12,30 @@ using Xunit;
 
 namespace PropertyCompiler.sdk.Test.Generator
 {
-    public class AssemblyGeneratorTests
+    public class ObjectGenerator
     {
         [Fact]
         public void Assembly_ShouldPass()
         {
-            string raw = "assembly filePath;";
+            var raw = new List<string>
+            {
+                "objectName = {",
+                "   Name1 = Value1",
+                "};",
+            };
 
             SyntaxTree syntaxTree = new SyntaxTreeBuilder()
-                .Add(new AssemblyExpressionBuilder())
-                .Add(raw)
+                .Add(new ObjectExpressionBuilder())
+                .Add(raw.ToArray())
                 .Build();
 
-            SyntaxResponse response = new AssemblyExpressionBuilder().Create(syntaxTree);
-            AssemblyExpression subject = (response.SyntaxNode as AssemblyExpression).VerifyNotNull(nameof(response.SyntaxNode));
-
-            var body = new Body() + subject;
+            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
+            Body body = (response.SyntaxNode as Body)!;
 
             IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
             list.Should().NotBeNull();
-            list.Count.Should().Be(1);
-            list.First().Should().Be(raw);
+
+            Enumerable.SequenceEqual(raw, list);
         }
     }
 }

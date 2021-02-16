@@ -20,6 +20,52 @@ namespace PropertyCompiler.sdk.Generator
 
         public IReadOnlyList<string> Build(Body body)
         {
+            List<string>? list = new List<string>();
+            int tab = 0;
+
+            var tokens = BuildTokens(body);
+            var stack = new Stack<string>(tokens.Reverse());
+
+            var builder = new StringBuilder();
+
+            while (stack.TryPop(out string? token))
+            {
+                builder.Append(token);
+
+                switch (token)
+                {
+                    case ";":
+                        addToList();
+                        break;
+
+                    case "{":
+                        builder.Append(token);
+                        addToList();
+                        tab++;
+                        break;
+
+                    case "}":
+                        builder.Append(token);
+                        addToList();
+                        tab--;
+                        break;
+                }
+            }
+
+            addToList();
+
+            return list;
+
+            void addToList()
+            {
+                if (builder.Length > 0)
+                {
+                    tab.VerifyAssert(x => x >= 0, "tab out of bounds");
+                    list.Add(new string(' ', tab * _tabSize) + builder.ToString());
+                    builder.Clear();
+                }
+
+            }
         }
 
         public IReadOnlyList<string> BuildTokens(Body body)
@@ -54,8 +100,7 @@ namespace PropertyCompiler.sdk.Generator
                         break;
 
                     case ObjectExpression objectExpression:
-                        list.Add($"{objectExpression.VariableName.Value}");
-                        list.Add("=");
+                        list.Add($"{objectExpression.VariableName.Value} = ");
                         list.Add("{");
                         break;
 
@@ -76,16 +121,16 @@ namespace PropertyCompiler.sdk.Generator
 
         private void BuildExpressionTokens(IList<string> list, ObjectExpression objectExpression)
         {
-            list.Add($"{objectExpression.VariableName.Value}");
-            list.Add("=");
+            list.Add($"{objectExpression.VariableName.Value} = ");
             list.Add("{");
 
             foreach (var item in objectExpression.Children)
             {
-                switch(item)
+                switch (item)
                 {
                     case ScalarAssignment scalarAssignment:
                         list.Add(Build(scalarAssignment));
+                        list.Add(",");
                         break;
 
                     case WithObjectExpression withObjectExpression:
@@ -107,9 +152,9 @@ namespace PropertyCompiler.sdk.Generator
             list.Add("}");
         }
 
-        public string Build(AssemblyExpression assemblyExpression) => $"assembly = {assemblyExpression.AssemblyPath.Value}";
-        public string Build(IncludeExpression includeExpression) => $"include = {includeExpression.IncludePath.Value}";
-        public string Build(ResourceExpression resourceExpression) => $"resource = {resourceExpression.ResourceId.Value} = {resourceExpression.FilePath.Value}";
-        public string Build(ScalarAssignment scalarAssignment) => $"{scalarAssignment.VariableName.Value} = {scalarAssignment.Constant.Value}";
+        private string Build(AssemblyExpression assemblyExpression) => $"assembly {assemblyExpression.AssemblyPath.Value}";
+        private string Build(IncludeExpression includeExpression) => $"include {includeExpression.IncludePath.Value}";
+        private string Build(ResourceExpression resourceExpression) => $"resource {resourceExpression.ResourceId.Value} = {resourceExpression.FilePath.Value}";
+        private string Build(ScalarAssignment scalarAssignment) => $"{scalarAssignment.VariableName.Value} = {scalarAssignment.Constant.Value}";
     }
 }

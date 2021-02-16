@@ -12,20 +12,20 @@ using Xunit;
 
 namespace PropertyCompiler.sdk.Test.Generator
 {
-    public class AssemblyGeneratorTests
+    public class ReosurceGeneratorTests
     {
         [Fact]
-        public void Assembly_ShouldPass()
+        public void Resource_ShouldPass()
         {
-            string raw = "assembly filePath;";
+            string raw = "resource resourceId = filePath;";
 
             SyntaxTree syntaxTree = new SyntaxTreeBuilder()
-                .Add(new AssemblyExpressionBuilder())
+                .Add(new ResourceExpressionBuilder())
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new AssemblyExpressionBuilder().Create(syntaxTree);
-            AssemblyExpression subject = (response.SyntaxNode as AssemblyExpression).VerifyNotNull(nameof(response.SyntaxNode));
+            SyntaxResponse response = new ResourceExpressionBuilder().Create(syntaxTree);
+            ResourceExpression subject = (response.SyntaxNode as ResourceExpression).VerifyNotNull(nameof(response.SyntaxNode));
 
             var body = new Body() + subject;
 
