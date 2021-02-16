@@ -52,7 +52,7 @@ namespace Toolbox.Language.Parser
 
         public override int GetHashCode() => HashCode.Combine(GrammarType, Value, IsQuotedString);
 
-        public override string ToString() => $"{nameof(SymbolValue<T>)}: GrammarType={GrammarType}, Value={Value}, IsQuotedString={IsQuotedString}";
+        public override string ToString() => $"{nameof(SymbolValue<T>)}: GrammarType={GrammarType}, Value=\"{Value}\", IsQuotedString={IsQuotedString}";
 
         public static bool operator ==(SymbolValue<T>? left, SymbolValue<T>? right) => EqualityComparer<SymbolValue<T>>.Default.Equals(left, right);
 

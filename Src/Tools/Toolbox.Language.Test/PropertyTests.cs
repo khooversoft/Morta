@@ -11,32 +11,47 @@ namespace Toolbox.Language.Test
     public class PropertyTests
     {
         private readonly CodeBlock<TestTokenType> _processRules;
-        private readonly ILoggerFactory _loggerFactory;
+
+        private ILogger _logger = LoggerFactory
+            .Create(x => x.AddDebug())
+            .CreateLogger("default");
 
         public PropertyTests()
         {
-            _loggerFactory = LoggerFactory.Create(x => x.AddDebug());
-
-            var assignment = new CodeBlock<TestTokenType>()
+            var assignment = new CodeBlock<TestTokenType>("assignment")
                 + LanguageSyntax.VariableName
                 + LanguageSyntax.Equal
                 + LanguageSyntax.Constant;
 
             var propertiesReference = new Reference<TestTokenType>();
 
-            var properties = new CodeBlock<TestTokenType>()
+            var properties = new CodeBlock<TestTokenType>("properties")
                 + LanguageSyntax.LeftBrace
 
-                + (new Optional<TestTokenType>()
-                    + (new Repeat<TestTokenType>()
-                        + assignment
+                + (new Optional<TestTokenType>("properties.1")
+                    + (new Repeat<TestTokenType>("properties.2")
+                        + LanguageSyntax.VariableName
+                        + LanguageSyntax.Equal
 
-                        + (new Optional<TestTokenType>()
-                            + LanguageSyntax.With
+                        + (new Choice<TestTokenType>("properties.3")
+                            + (new CodeBlock<TestTokenType>("properties.4")
+                                + LanguageSyntax.With
+                                + propertiesReference
+                            )
+
+                            + (new CodeBlock<TestTokenType>("properties.5")
+                                + LanguageSyntax.Constant
+
+                                + (new Optional<TestTokenType>("properties.6")
+                                    + LanguageSyntax.With
+                                    + propertiesReference
+                                )
+                            )
+
                             + propertiesReference
                         )
 
-                        + (new Optional<TestTokenType>()
+                        + (new Optional<TestTokenType>("properties.7")
                             + LanguageSyntax.Comma
                         )
                     )
@@ -46,14 +61,21 @@ namespace Toolbox.Language.Test
 
             propertiesReference.Set(properties);
 
-            _processRules = new CodeBlock<TestTokenType>()
-                + (new Choice<TestTokenType>()
-                    + (new CodeBlock<TestTokenType>()
+            _processRules = new CodeBlock<TestTokenType>("rules")
+                + (new Choice<TestTokenType>("rules.0")
+                    + (new CodeBlock<TestTokenType>("rules.1")
                         + assignment
                         + LanguageSyntax.SemiColon
                         )
+                        
+                    + (new CodeBlock<TestTokenType>("rules.2")
+                        + assignment
+                        + LanguageSyntax.With
+                        + properties
+                        + LanguageSyntax.SemiColon
+                        )
 
-                    + (new CodeBlock<TestTokenType>()
+                    + (new CodeBlock<TestTokenType>("rules.3")
                         + LanguageSyntax.VariableName
                         + LanguageSyntax.Equal
                         + properties
@@ -100,8 +122,10 @@ namespace Toolbox.Language.Test
 
             var parser = new SymbolParser<TestTokenType>(_processRules);
 
-            SymbolParserResponse<TestTokenType> response = parser.Parse(commands);
-            response.Nodes.Should().NotBeNull();
+            SymbolParserResponse<TestTokenType> response = parser.Parse(commands)
+                .DumpDebugStack<TestTokenType>(_logger);
+
+            response.Should().NotBeNull();
 
             var matchList = new ISymbolToken[]
             {
@@ -174,6 +198,42 @@ namespace Toolbox.Language.Test
 
         [Fact]
         public void SingleObjectWithProperty_ShouldPass()
+        {
+            string command = @"
+                objectName = refValue with {
+                    Name1 = Value1
+                };
+            ";
+
+            var parser = new SymbolParser<TestTokenType>(_processRules);
+
+            SymbolParserResponse<TestTokenType> response = parser.Parse(command)
+                .DumpDebugStack(_logger);
+
+            response.Nodes.Should().NotBeNull();
+
+            var matchList = new ISymbolToken[]
+            {
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "objectName"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "refValue"),
+
+                new SymbolToken<TestTokenType>(TestTokenType.With),
+                new SymbolToken<TestTokenType>(TestTokenType.LeftBrace),
+
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name1"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value1"),
+
+                new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
+                new SymbolToken<TestTokenType>(TestTokenType.SemiColon),
+            };
+
+            Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
+        }
+
+        [Fact]
+        public void SingleObjectChildWithProperty_ShouldPass()
         {
             var commands = new[]
             {
@@ -250,6 +310,54 @@ namespace Toolbox.Language.Test
                 new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value3"),
                 new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
 
+                new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
+                new SymbolToken<TestTokenType>(TestTokenType.SemiColon),
+            };
+
+            Enumerable.SequenceEqual(response.Nodes!, matchList).Should().BeTrue();
+        }
+
+        [Fact]
+        public void SingleObjectEqualTwoProperties_ShouldPass()
+        {
+            var commands = new[]
+            {
+                "objectName = {",
+                    "Name1 = {",
+                        "Name2 = {",
+                            "Name3 = Value3",
+                        "}",
+                    "}",
+                "};"
+            };
+
+            var parser = new SymbolParser<TestTokenType>(_processRules);
+
+            SymbolParserResponse<TestTokenType> response = parser.Parse(commands)
+                .DumpDebugStack<TestTokenType>(_logger);
+
+            response.Nodes.Should().NotBeNull();
+
+            var matchList = new ISymbolToken[]
+            {
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "objectName"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+
+                new SymbolToken<TestTokenType>(TestTokenType.LeftBrace),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name1"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+
+                new SymbolToken<TestTokenType>(TestTokenType.LeftBrace),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name2"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+
+                new SymbolToken<TestTokenType>(TestTokenType.LeftBrace),
+                new SymbolValue<TestTokenType>(TestTokenType.VariableName, "Name3"),
+                new SymbolToken<TestTokenType>(TestTokenType.Equal),
+                new SymbolValue<TestTokenType>(TestTokenType.Constant, "Value3"),
+
+                new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
+                new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
                 new SymbolToken<TestTokenType>(TestTokenType.RightBrace),
                 new SymbolToken<TestTokenType>(TestTokenType.SemiColon),
             };

@@ -17,6 +17,7 @@ namespace Toolbox.Language.Parser
         {
             bool passed = false;
             SymbolNode<T> syntaxNode = new SymbolNode<T>();
+            var debugList = new SymbolNode<T>();
 
             context.InputTokens.SaveCursor();
 
@@ -25,22 +26,28 @@ namespace Toolbox.Language.Parser
                 foreach (IGrammar<T> item in grammars)
                 {
                     if (!context.InputTokens.TryNext(out IToken? token)) return PushToDebugStack("Out of input tokens");
+                    addDebug($"Next token={token}");
 
                     switch (item)
                     {
                         case IExpression<T> expression:
-                            if (token.TokenType != TokenType.Data) return PushToDebugStack($"{expression} is not TokenType.Data");
+                            addDebug($"Expression={expression}");
+
+                            if (token.TokenType != TokenType.Data) return PushToDebugStack($"\"{expression}\" is not TokenType.Data");
 
                             syntaxNode.Add(expression.CreateToken(token));
                             break;
 
                         case IGrammarToken<T> grammar:
-                            if (token.Value != grammar.Match) return PushToDebugStack($"{grammar} does not match token={token.Value}");
+                            addDebug($"Grammar={grammar}");
+
+                            if (token.Value != grammar.Match) return PushToDebugStack($"\"{grammar}\" does not match token=\"{token.Value}\"");
 
                             syntaxNode.Add(grammar.CreateToken(token));
                             break;
 
                         case ICodeBlock<T> ruleBlock:
+                            addDebug($"Grammar={ruleBlock}");
                             context.InputTokens.Cursor--;
 
                             SymbolNode<T>? result = ruleBlock.Build(context);
@@ -70,10 +77,15 @@ namespace Toolbox.Language.Parser
 
             SymbolNode<T>? PushToDebugStack(string reason)
             {
-                syntaxNode.Add(new MessageTrivia { Message = reason });
+                addDebug($"reason={reason}");
 
-                context.DebugStack.Add(syntaxNode);
+                context.DebugStack.Add(debugList + syntaxNode);
                 return null;
+            }
+
+            void addDebug(string message)
+            {
+                debugList.Add(new MessageTrivia { Message = message });
             }
         }
     }

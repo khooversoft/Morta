@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Toolbox.Extensions;
 using Toolbox.Language.Parser;
 using Toolbox.Language.ProcessingRules;
-using Toolbox.Tools;
 
 namespace PropertyCompiler.sdk.Expressions
 {
@@ -21,48 +20,36 @@ namespace PropertyCompiler.sdk.Expressions
     ///     
     /// </summary>
     /// 
-    public class ScalarAssignmentExpressionBuilder : IExpressionBuilder
+    public class ScalarAssignmentBuilder : IExpressionBuilder
     {
         private static readonly CodeBlock<SymbolType> _processingRules = new CodeBlock<SymbolType>()
         {
             new CodeBlock<SymbolType>()
-                + Symbols.VariableName
-                + Symbols.Equal
-                + Symbols.Constant
-                + Symbols.SemiColon
+                + SymbolSyntax.VariableName
+                + SymbolSyntax.Equal
+                + SymbolSyntax.Constant
+                + SymbolSyntax.SemiColon
         };
 
         public CodeBlock<SymbolType> ProcessingRules => _processingRules;
 
-        public SyntaxNode? Create(SyntaxTree syntaxTree)
+        public SyntaxResponse Create(SyntaxTree syntaxTree)
         {
             SymbolParserResponse<SymbolType> response = new SymbolParser<SymbolType>(_processingRules)
                 .Parse(syntaxTree.SymbolParserContext);
 
-            if (response.Nodes == null) return null;
+            if (response.Nodes == null) return new SyntaxResponse { DebugStack = response.DebugStack };
 
             var stack = new Stack<ISymbolToken>(response.Nodes.Reverse<ISymbolToken>());
 
-            string variable = stack.GetNextValue().Value;
-            string constant = stack.GetNextValue().Value;
+            SymbolValue<SymbolType> variable = stack.GetNextValue();
+            SymbolValue<SymbolType> constant = stack.GetNextValue();
 
-            return new ScalarAssignmentExpression(syntaxTree, variable, constant);
+            return new SyntaxResponse
+            {
+                SyntaxNode = new ScalarAssignment(variable, constant),
+                DebugStack = response.DebugStack
+            };
         }
-    }
-
-    public class ScalarAssignmentExpression : SyntaxNode
-    {
-        public ScalarAssignmentExpression(SyntaxTree syntaxTree, string variableName, string? constant)
-            : base(syntaxTree)
-        {
-            variableName.VerifyNotNull(nameof(variableName));
-
-            VariableName = variableName;
-            Constant = constant;
-        }
-
-        public string VariableName { get; }
-
-        public string? Constant { get; }
     }
 }

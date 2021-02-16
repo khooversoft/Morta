@@ -13,5 +13,11 @@ namespace Toolbox.Language.Parser
             right.ForEach(x => left.Add(x));
             return left;
         }
+
+        public static SymbolNode<T> operator +(SymbolNode<T> left, ISymbolToken right)
+        {
+            left.Add(right);
+            return left;
+        }
     }
 }

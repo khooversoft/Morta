@@ -1,25 +1,23 @@
 ﻿using PropertyCompiler.sdk.Grammar;
 using PropertyCompiler.sdk.Syntax;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Toolbox.Language.Parser;
 using Toolbox.Tools;
 
 namespace PropertyCompiler.sdk.Expressions
 {
-
-    public class ObjectExpression : ISyntaxCollection, ISyntaxNode
+    public class ScalarAssignment : ISyntaxNode
     {
-        public ObjectExpression(SymbolValue<SymbolType> variableName)
+        public ScalarAssignment(SymbolValue<SymbolType> variableName, SymbolValue<SymbolType> constant)
         {
             variableName.VerifyNotNull(nameof(variableName));
+            constant.VerifyNotNull(nameof(constant));
 
             VariableName = variableName;
+            Constant = constant;
         }
 
         public SymbolValue<SymbolType> VariableName { get; }
 
-        public IList<ISyntaxNode> Children { get; } = new List<ISyntaxNode>();
+        public SymbolValue<SymbolType> Constant { get; }
     }
 }

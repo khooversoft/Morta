@@ -18,13 +18,12 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            ResourceExpression subject =
-                (new ResourceExpressionBuilder().Create(syntaxTree) as ResourceExpression)
-                .VerifyNotNull("Failed");
+            SyntaxResponse response = new ResourceExpressionBuilder().Create(syntaxTree);
+            ResourceExpression subject = (response.SyntaxNode as ResourceExpression)!;
 
             subject.Should().NotBeNull();
-            subject.ResourceId.Should().Be("resourceId");
-            subject.FilePath.Should().Be("filePath");
+            subject.ResourceId.Value.Should().Be("resourceId");
+            subject.FilePath.Value.Should().Be("filePath");
         }
     }
 }

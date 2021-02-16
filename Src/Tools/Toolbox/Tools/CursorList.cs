@@ -15,12 +15,13 @@ namespace Toolbox.Tools
     /// <typeparam name="T">list type</typeparam>
     public class CursorList<T> : IEnumerable<T>
     {
-        private readonly List<T> _list = new List<T>();
+        private readonly List<T> _list;
         private readonly Stack<int> _cursorStack = new Stack<int>();
         private int _cursor = 0;
 
         public CursorList()
         {
+            _list = new List<T>();
         }
 
         public CursorList(IEnumerable<T> list)

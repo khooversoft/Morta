@@ -11,9 +11,33 @@ namespace Toolbox.Language.ProcessingRules
 {
     public class Optional<T> : List<IGrammar<T>>, ICodeBlock<T> where T : Enum
     {
-        public SymbolNode<T>? Build(SymbolParserContext context) => new SymbolMatcher<T>().Build(context, this) ?? new SymbolNode<T>();
+        public Optional()
+        {
+        }
 
-        public override string ToString() => $"{nameof(Optional<T>)}, Count={Count}";
+        public Optional(string name)
+        {
+            Name = name;
+        }
+
+        public string? Name { get; }
+
+        public SymbolNode<T>? Build(SymbolParserContext context)
+        {
+            context.LogStarting<T>(this);
+
+            SymbolNode<T>? result = new SymbolMatcher<T>().Build(context, this);
+
+            if (result != null)
+                context.LogCompleted<T>(this);
+            else
+                context.LogSkipped<T>(this);
+
+            // Optional is never a failure
+            return result ?? new SymbolNode<T>();
+        }
+
+        public override string ToString() => $"{nameof(Optional<T>)}, Name={Name}, Count ={Count}";
 
         public static Optional<T> operator +(Optional<T> left, IGrammar<T> right)
         {

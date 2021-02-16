@@ -18,12 +18,11 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            IncludeExpression subject =
-                (new IncludeExpressionBuilder().Create(syntaxTree) as IncludeExpression)
-                .VerifyNotNull("Failed");
+            SyntaxResponse response = new IncludeExpressionBuilder().Create(syntaxTree);
+            IncludeExpression subject = (response.SyntaxNode as IncludeExpression).VerifyNotNull(nameof(response.SyntaxNode));
 
             subject.Should().NotBeNull();
-            subject.IncludePath.Should().Be("filePath");
+            subject!.IncludePath.Value.Should().Be("filePath");
         }
     }
 }

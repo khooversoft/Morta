@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Toolbox.Tools;
@@ -16,6 +17,7 @@ namespace Toolbox.Extensions
         /// <param name="subject">subject</param>
         /// <param name="function">lambda execute</param>
         /// <returns>return from lambda</returns>
+        [DebuggerStepThrough]
         public static TResult Func<T, TResult>(this T subject, Func<T, TResult> function) => function.VerifyNotNull(nameof(subject))(subject);
 
         /// <summary>
@@ -25,6 +27,7 @@ namespace Toolbox.Extensions
         /// <param name="subject">subject</param>
         /// <param name="action">action</param>
         /// <returns>subject</returns>
+        [DebuggerStepThrough]
         public static T Action<T>(this T subject, Action<T> action)
         {
             subject.VerifyNotNull(nameof(subject));

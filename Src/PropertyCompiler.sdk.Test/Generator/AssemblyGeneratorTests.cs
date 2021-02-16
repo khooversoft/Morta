@@ -1,15 +1,19 @@
-﻿using FluentAssertions;
-using PropertyCompiler.sdk.Expressions;
+﻿using PropertyCompiler.sdk.Expressions;
 using PropertyCompiler.sdk.Syntax;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Toolbox.Tools;
 using Xunit;
 
-namespace PropertyCompiler.sdk.Test.Expressions
+namespace PropertyCompiler.sdk.Test.Generator
 {
-    public class AssemblyExpressionTests
+    public class AssemblyGeneratorTests
     {
         [Fact]
-        public void ValidAssembly_ShouldPass()
+        public void Assembly_ShouldPass()
         {
             string raw = "assembly filePath;";
 
@@ -19,10 +23,9 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Build();
 
             SyntaxResponse response = new AssemblyExpressionBuilder().Create(syntaxTree);
-            AssemblyExpression subject = (response.SyntaxNode as AssemblyExpression)!;
+            AssemblyExpression subject = (response.SyntaxNode as AssemblyExpression).VerifyNotNull(nameof(response.SyntaxNode));
 
-            subject.Should().NotBeNull();
-            subject.AssemblyPath.Value.Should().Be("filePath");
+
         }
     }
 }

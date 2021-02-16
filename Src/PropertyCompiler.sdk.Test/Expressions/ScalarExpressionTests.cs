@@ -14,17 +14,16 @@ namespace PropertyCompiler.sdk.Test.Expressions
             string raw = "name = value;";
 
             SyntaxTree syntaxTree = new SyntaxTreeBuilder()
-                .Add(new ScalarAssignmentExpressionBuilder())
+                .Add(new ScalarAssignmentBuilder())
                 .Add(raw)
                 .Build();
 
-            ScalarAssignmentExpression subject =
-                (new ScalarAssignmentExpressionBuilder().Create(syntaxTree) as ScalarAssignmentExpression)
-                .VerifyNotNull("failed");
+            SyntaxResponse response = new ScalarAssignmentBuilder().Create(syntaxTree);
+            ScalarAssignment subject = (response.SyntaxNode as ScalarAssignment).VerifyNotNull(nameof(response.SyntaxNode));
 
             subject.Should().NotBeNull();
-            subject.VariableName.Should().Be("name");
-            subject.Constant.Should().Be("value");
+            subject.VariableName.Value.Should().Be("name");
+            subject.Constant.Value.Should().Be("value");
         }
     }
 }

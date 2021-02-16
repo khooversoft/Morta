@@ -12,6 +12,6 @@ namespace PropertyCompiler.sdk.Syntax
     {
         public CodeBlock<SymbolType> ProcessingRules { get; }
 
-        public SyntaxNode? Create(SyntaxTree syntaxTree);
+        public SyntaxResponse Create(SyntaxTree syntaxTree);
     }
 }

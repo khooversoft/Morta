@@ -14,11 +14,31 @@ namespace Toolbox.Language.ProcessingRules
     {
         private CodeBlock<T>? _codeBlock;
 
+        public Reference() 
+        {
+        }
+
+        public Reference(string name)
+        {
+            Name = name;
+        }
+
+        public string? Name { get; }
+
         public SymbolNode<T>? Build(SymbolParserContext context)
         {
             _codeBlock.VerifyNotNull("Code block not set");
 
-            return new SymbolMatcher<T>().Build(context, _codeBlock);
+            context.LogStarting<T>(this);
+
+            SymbolNode<T>? result = new SymbolMatcher<T>().Build(context, _codeBlock);
+
+            if (result != null)
+                context.LogCompleted<T>(this);
+            else
+                context.LogFail<T>(this);
+
+            return result;
         }
 
         public void Set(CodeBlock<T> codeBlock) => _codeBlock = codeBlock;

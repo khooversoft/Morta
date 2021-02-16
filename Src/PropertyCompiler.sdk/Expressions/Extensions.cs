@@ -15,7 +15,24 @@ namespace PropertyCompiler.sdk.Expressions
                 if (symbolToken is SymbolValue<SymbolType> value) return value;
             }
 
-            throw new ArgumentException("End of stack, no symbol value");
+            throw new InvalidOperationException("No value");
+        }
+
+        public static SymbolToken<SymbolType>? GetNextToken(this Stack<ISymbolToken> stack, SymbolType symbolType)
+        {
+            if (stack.TryPop(out ISymbolToken? symbolToken))
+            {
+                if (symbolToken is SymbolToken<SymbolType> token && token.GrammarType == symbolType) return token;
+            }
+
+            throw new InvalidOperationException($"{symbolType} not next token or stack empty");
+        }
+
+        public static ISymbolToken GetNext(this Stack<ISymbolToken> stack)
+        {
+            if (stack.TryPop(out ISymbolToken? symbolToken)) return symbolToken;
+
+            throw new InvalidOperationException("End of stack");
         }
     }
 }

@@ -23,5 +23,7 @@ namespace PropertyCompiler.sdk.Syntax
         public IReadOnlyList<IExpressionBuilder> ExpressionBuilders { get; }
 
         public SymbolParserContext SymbolParserContext { get; }
+
+        public IReadOnlyList<ISyntaxNode>? SyntaxNodes { get; set; }
     }
 }

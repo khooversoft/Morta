@@ -35,7 +35,7 @@ namespace Toolbox.Language.Grammar
                 Match == subject.Match;
         }
 
-        public override string ToString() => $"{nameof(GrammarToken<T>)}: GrammarType={GrammarType}, Match={Match}";
+        public override string ToString() => $"{nameof(GrammarToken<T>)}: GrammarType={GrammarType}, Match=\"{Match}\"";
 
         public override int GetHashCode() => Match.GetHashCode();
     }

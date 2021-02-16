@@ -7,29 +7,7 @@ using Toolbox.Language.Grammar;
 
 namespace PropertyCompiler.sdk.Grammar
 {
-    public enum SymbolType
-    {
-        Space,
-        SemiColon,
-        Equal,
-        LeftParen,
-        RightParen,
-        LeftBrace,
-        RightBrace,
-        Comma,
-
-        Assembly,
-        Include,
-        Resource,
-
-        TypeName,
-        VariableName,
-        Constant,
-        MethodName,
-        MethodParameterValue,
-    }
-
-    public static class Symbols
+    public static class SymbolSyntax
     {
         public static IGrammarToken<SymbolType> Space = new GrammarToken<SymbolType>(SymbolType.Space, " ");
         public static IGrammarToken<SymbolType> SemiColon = new GrammarToken<SymbolType>(SymbolType.SemiColon, ";", GrammarFlags.EndStatement);
@@ -40,6 +18,7 @@ namespace PropertyCompiler.sdk.Grammar
         public static IGrammarToken<SymbolType> RightBrace = new GrammarToken<SymbolType>(SymbolType.RightBrace, "}", GrammarFlags.EndCodeBlock);
         public static IGrammarToken<SymbolType> Comma = new GrammarToken<SymbolType>(SymbolType.Comma, ",");
 
+        public static IGrammarToken<SymbolType> With = new GrammarToken<SymbolType>(SymbolType.With, "with", GrammarFlags.Keyword);
         public static IGrammarToken<SymbolType> Assembly = new GrammarToken<SymbolType>(SymbolType.Assembly, "assembly", GrammarFlags.Keyword);
         public static IGrammarToken<SymbolType> Include = new GrammarToken<SymbolType>(SymbolType.Include, "include", GrammarFlags.Keyword);
         public static IGrammarToken<SymbolType> Resource = new GrammarToken<SymbolType>(SymbolType.Resource, "resource", GrammarFlags.Keyword);

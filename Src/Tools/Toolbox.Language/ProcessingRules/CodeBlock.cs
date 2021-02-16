@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Toolbox.Extensions;
@@ -12,11 +13,36 @@ namespace Toolbox.Language.ProcessingRules
 {
     public class CodeBlock<T> : List<IGrammar<T>>, ICodeBlock<T> where T : Enum
     {
+        public CodeBlock()
+        {
+        }
+
+        public CodeBlock(string name)
+        {
+            Name = name;
+        }
+
+        public string? Name { get; }
+
         public IReadOnlyList<IGrammarToken<T>> GetGrammars() => this.Flatten<IGrammar<T>>().OfType<IGrammarToken<T>>().ToList();
 
-        public SymbolNode<T>? Build(SymbolParserContext context) => new SymbolMatcher<T>().Build(context, this);
+        public SymbolNode<T>? Build(SymbolParserContext context)
+        {
+            context.LogStarting<T>(this);
 
-        public override string ToString() => $"{nameof(CodeBlock<T>)}, Count={Count}";
+            SymbolNode<T>? result = new SymbolMatcher<T>().Build(context, this);
+
+            if (result != null)
+                context.LogCompleted<T>(this);
+            else
+
+                context.LogFail<T>(this);
+
+            return result;
+        }
+
+
+        public override string ToString() => $"{nameof(CodeBlock<T>)}, Name={Name}, Count={Count}";
 
         public static CodeBlock<T> operator +(CodeBlock<T> left, IGrammar<T> right)
         {

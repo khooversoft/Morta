@@ -26,7 +26,6 @@ namespace Toolbox.Language.Test
 
         DeclareObject,
         With,
-        Data,
     }
 
     public static class LanguageSyntax

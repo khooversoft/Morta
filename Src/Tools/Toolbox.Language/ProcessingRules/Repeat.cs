@@ -13,10 +13,23 @@ namespace Toolbox.Language.ProcessingRules
 {
     public class Repeat<T> : List<IGrammar<T>>, ICodeBlock<T> where T : Enum
     {
+        public Repeat()
+        {
+        }
+
+        public Repeat(string name)
+        {
+            Name = name;
+        }
+
+        public string? Name { get; }
+
         public SymbolNode<T>? Build(SymbolParserContext context)
         {
             var matcher = new SymbolMatcher<T>();
             var syntaxNode = new SymbolNode<T>();
+
+            context.LogStarting<T>(this);
 
             while (true)
             {
@@ -26,10 +39,11 @@ namespace Toolbox.Language.ProcessingRules
                 syntaxNode += result;
             }
 
+            context.LogCompleted<T>(this);
             return syntaxNode;
         }
 
-        public override string ToString() => $"{nameof(Repeat<T>)}, Count={Count}";
+        public override string ToString() => $"{nameof(Repeat<T>)}, Name={Name}, Count={Count}";
 
         public static Repeat<T> operator +(Repeat<T> left, IGrammar<T> right)
         {
