@@ -8,6 +8,9 @@ namespace PropertyCompiler.sdk.Syntax
 {
     public class SyntaxTree
     {
+        private readonly IList<ISyntaxNode> _syntaxNodes = new List<ISyntaxNode>();
+        private readonly IList<SyntaxResponse> _syntaxResponses = new List<SyntaxResponse>();
+
         public SyntaxTree(SymbolParserContext symbolParserContext, IEnumerable<IExpressionBuilder> expressionBuilders)
         {
             symbolParserContext.VerifyNotNull(nameof(symbolParserContext));
@@ -24,6 +27,12 @@ namespace PropertyCompiler.sdk.Syntax
 
         public SymbolParserContext SymbolParserContext { get; }
 
-        public IReadOnlyList<ISyntaxNode>? SyntaxNodes { get; set; }
+        public IReadOnlyList<ISyntaxNode>? SyntaxNodes => (List<ISyntaxNode>)_syntaxNodes;
+
+        public IReadOnlyList<SyntaxResponse> SyntaxResponses => (List<SyntaxResponse>)_syntaxResponses;
+
+        public SyntaxTree Build()
+        {
+        }
     }
 }

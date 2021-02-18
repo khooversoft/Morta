@@ -15,7 +15,7 @@ namespace PropertyCompiler.sdk.Test.Generator
     public class ObjectGenerator
     {
         [Fact]
-        public void Assembly_ShouldPass()
+        public void SingleProperty_ShouldPass()
         {
             var raw = new List<string>
             {
@@ -35,7 +35,83 @@ namespace PropertyCompiler.sdk.Test.Generator
             IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
             list.Should().NotBeNull();
 
-            Enumerable.SequenceEqual(raw, list);
+            Enumerable.SequenceEqual(raw, list).Should().BeTrue();
+        }
+        
+        [Fact]
+        public void MultipleProperties_ShouldPass()
+        {
+            var raw = new List<string>
+            {
+                "objectName = {",
+                "   Name1 = Value1,",
+                "   Name2 = Value2",
+                "};",
+            };
+
+            SyntaxTree syntaxTree = new SyntaxTreeBuilder()
+                .Add(new ObjectExpressionBuilder())
+                .Add(raw.ToArray())
+                .Build();
+
+            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
+            Body body = (response.SyntaxNode as Body)!;
+
+            IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
+            list.Should().NotBeNull();
+
+            Enumerable.SequenceEqual(raw, list).Should().BeTrue();
+        }
+        
+        [Fact]
+        public void WithProperties_ShouldPass()
+        {
+            var raw = new List<string>
+            {
+                "objectName = refValue with {",
+                "   Name1 = Value1",
+                "};",
+            };
+
+            SyntaxTree syntaxTree = new SyntaxTreeBuilder()
+                .Add(new ObjectExpressionBuilder())
+                .Add(raw.ToArray())
+                .Build();
+
+            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
+            Body body = (response.SyntaxNode as Body)!;
+
+            IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
+            list.Should().NotBeNull();
+
+            Enumerable.SequenceEqual(raw, list).Should().BeTrue();
+        }
+        
+        [Fact]
+        public void InnerWithProperties_ShouldPass()
+        {
+            var raw = new List<string>
+            {
+                "objectName = {",
+                "   Name1 = Value1 with {",
+                "      Name2 = Value2,",
+                "      Name3 = Value3",
+                "   }",
+                "};",
+            };
+
+            SyntaxTree syntaxTree = new SyntaxTreeBuilder()
+                .Add(new ObjectExpressionBuilder())
+                .Add(raw.ToArray())
+                .Build();
+
+            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
+            Body body = (response.SyntaxNode as Body)!;
+
+            IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
+            list.Should().NotBeNull();
+
+            Enumerable.SequenceEqual(raw, list).Should().BeTrue();
         }
     }
 }

@@ -20,136 +20,95 @@ namespace PropertyCompiler.sdk.Generator
 
         public IReadOnlyList<string> Build(Body body)
         {
-            List<string>? list = new List<string>();
-            int tab = 0;
+            body.VerifyNotNull(nameof(body));
 
-            var tokens = BuildTokens(body);
-            var stack = new Stack<string>(tokens.Reverse());
-
-            var builder = new StringBuilder();
-
-            while (stack.TryPop(out string? token))
-            {
-                builder.Append(token);
-
-                switch (token)
-                {
-                    case ";":
-                        addToList();
-                        break;
-
-                    case "{":
-                        builder.Append(token);
-                        addToList();
-                        tab++;
-                        break;
-
-                    case "}":
-                        builder.Append(token);
-                        addToList();
-                        tab--;
-                        break;
-                }
-            }
-
-            addToList();
-
-            return list;
-
-            void addToList()
-            {
-                if (builder.Length > 0)
-                {
-                    tab.VerifyAssert(x => x >= 0, "tab out of bounds");
-                    list.Add(new string(' ', tab * _tabSize) + builder.ToString());
-                    builder.Clear();
-                }
-
-            }
+            return BuildTokens(body);
         }
 
-        public IReadOnlyList<string> BuildTokens(Body body)
+        public IReadOnlyList<string> BuildTokens(ISyntaxCollection body)
         {
             body.VerifyNotNull(nameof(body));
 
-            var list = new List<string>();
-            var stack = new Stack<ISyntaxNode>(body.Children.Reverse());
+            int tab = 0;
+            List<string> list = new List<string>();
+            Stack<object> stack = new Stack<object>(body.Children.Reverse());
 
-            while (stack.TryPop(out ISyntaxNode? syntaxNode))
+            while (stack.TryPop(out object? syntaxNode))
             {
                 switch (syntaxNode)
                 {
                     case AssemblyExpression assemblyExpression:
-                        list.Add($"{Build(assemblyExpression)}");
-                        list.Add($";");
+                        addToList($"{Build(assemblyExpression)};");
                         break;
 
                     case IncludeExpression includeExpression:
-                        list.Add($"{Build(includeExpression)}");
-                        list.Add($";");
+                        addToList($"{Build(includeExpression)};");
                         break;
 
                     case ResourceExpression resourceExpression:
-                        list.Add($"{Build(resourceExpression)}");
-                        list.Add($";");
+                        addToList($"{Build(resourceExpression)};");
                         break;
 
                     case ScalarAssignment scalarAssignment:
-                        list.Add($"{Build(scalarAssignment)}");
-                        list.Add($";");
+                        string trailing = tab == 0 ? ";" : ",";
+                        addToList($"{Build(scalarAssignment)}{trailing}");
                         break;
 
-                    case ObjectExpression objectExpression:
-                        list.Add($"{objectExpression.VariableName.Value} = ");
-                        list.Add("{");
-                        break;
+                    case WithObjectExpression withObjectExpression when list.Count > 0:
+                        string assignment = list[^1][..^1];
+                        list.RemoveAt(list.Count - 1);
 
-                    case ISyntaxCollection collection:
-                        collection.Children
+                        list.Add($"{assignment} with {{");
+
+                        tab++;
+                        stack.Push((Action)(() => stack.Push(tab == 0 ? "};" : "}")));
+                        stack.Push((Action)(() => tab--));
+
+                        withObjectExpression.Children
                             .Reverse()
                             .ForEach(x => stack.Push(x));
+
+                        break;
+
+
+                    case ObjectExpression objectExpression:
+                        addToList($"{objectExpression.VariableName.Value} = {{");
+
+                        tab++;
+                        stack.Push((Action)(() => stack.Push(tab == 0 ? "};" : "}")));
+                        stack.Push((Action)(() => tab--));
+
+                        objectExpression.Children
+                            .Reverse()
+                            .ForEach(x => stack.Push(x));
+
+                        break;
+
+                    case Action action:
+                        action();
+                        break;
+
+                    case string subject when subject.StartsWith("}") && list.Count > 1 && list[^1].EndsWith(","):
+                        list[^1] = list[^1][..^1];
+                        addToList(subject);
+                        break;
+
+                    case string subject:
+                        addToList(subject);
                         break;
 
                     default:
-                        list.Add(syntaxNode?.ToString() ?? "<none>");
-                        break;
+                        throw new ArgumentException("Unknown syntax");
                 }
             }
 
             return list;
-        }
 
-        private void BuildExpressionTokens(IList<string> list, ObjectExpression objectExpression)
-        {
-            list.Add($"{objectExpression.VariableName.Value} = ");
-            list.Add("{");
-
-            foreach (var item in objectExpression.Children)
+            void addToList(string subject)
             {
-                switch (item)
-                {
-                    case ScalarAssignment scalarAssignment:
-                        list.Add(Build(scalarAssignment));
-                        list.Add(",");
-                        break;
-
-                    case WithObjectExpression withObjectExpression:
-                        list.Add("with");
-                        list.Add("{");
-                        BuildExpressionTokens(list, withObjectExpression);
-                        list.Add("}");
-                        break;
-
-                    case ObjectExpression objExpression:
-                        BuildExpressionTokens(list, objExpression);
-                        break;
-
-                    default:
-                        throw new ArgumentException($"Invalid expression {item}");
-                }
+                tab.VerifyAssert(x => x >= 0, "tab out of bounds");
+                list.Add(new string(' ', tab * _tabSize) + subject);
             }
-
-            list.Add("}");
         }
 
         private string Build(AssemblyExpression assemblyExpression) => $"assembly {assemblyExpression.AssemblyPath.Value}";

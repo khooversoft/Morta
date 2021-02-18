@@ -1,19 +1,20 @@
 ﻿city = "City";
 
 include "file1";
+assembly mytools.dll;
 
 resource resourceId = "file2";
 
 
 firstName = "Jeff Roberts";
-fullName = { First = "Jeff", Last = "Roberts" }
+fullName = { First = "Jeff", Last = Roberts };
 
 address = {
     street = "One street",
     city = city,
     State = "state",
     Zip = "zipCode"
-}
+};
 
 profile = {
     firstName = firstName,
@@ -23,4 +24,4 @@ profile = {
     address = address with {
         zipCode = "98033"
     }
-}
+};
