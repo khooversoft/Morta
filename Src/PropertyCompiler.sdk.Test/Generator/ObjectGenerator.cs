@@ -29,8 +29,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw.ToArray())
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
+            syntaxTree.IsError.Should().BeFalse();
+
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
             list.Should().NotBeNull();
@@ -54,8 +55,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw.ToArray())
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
+            syntaxTree.IsError.Should().BeFalse();
+
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
             list.Should().NotBeNull();
@@ -78,8 +80,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw.ToArray())
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
+            syntaxTree.IsError.Should().BeFalse();
+
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
             list.Should().NotBeNull();
@@ -105,8 +108,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw.ToArray())
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
+            syntaxTree.IsError.Should().BeFalse();
+
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             IReadOnlyList<string> list = new TextCodeGenerator().Build(body);
             list.Should().NotBeNull();

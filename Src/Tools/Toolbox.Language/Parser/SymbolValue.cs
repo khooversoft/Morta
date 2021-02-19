@@ -39,10 +39,7 @@ namespace Toolbox.Language.Parser
 
         public bool IsQuotedString { get; }
 
-        public override bool Equals(object? obj)
-        {
-            return Equals(obj as SymbolValue<T>);
-        }
+        public override bool Equals(object? obj) => Equals(obj as SymbolValue<T>);
 
         public bool Equals(SymbolValue<T>? subject) =>
             subject != null &&

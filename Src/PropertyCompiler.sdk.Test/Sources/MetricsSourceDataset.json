@@ -1,0 +1,57 @@
+﻿{
+  "name": "MetricsSource",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "MetricsAttributeSource",
+      "type": "LinkedServiceReference"
+    },
+    "annotations": [],
+    "type": "DelimitedText",
+    "typeProperties": {
+      "location": {
+        "type": "AzureBlobFSLocation",
+        "fileName": "MetricsAttributeExtract.csv",
+        "folderPath": "Current",
+        "fileSystem": "transfer"
+      },
+      "columnDelimiter": ",",
+      "escapeChar": "\\",
+      "firstRowAsHeader": true,
+      "quoteChar": "\""
+    },
+    "schema": [
+      {
+        "name": "Today",
+        "type": "String"
+      },
+      {
+        "name": "Region",
+        "type": "String"
+      },
+      {
+        "name": "Segment",
+        "type": "String"
+      },
+      {
+        "name": "TotalCount",
+        "type": "String"
+      },
+      {
+        "name": "TotalImpressions",
+        "type": "String"
+      },
+      {
+        "name": "AttributeType",
+        "type": "String"
+      },
+      {
+        "name": "Attribute",
+        "type": "String"
+      },
+      {
+        "name": "Value",
+        "type": "String"
+      }
+    ]
+  }
+}

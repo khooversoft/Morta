@@ -24,8 +24,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new AssemblyExpressionBuilder().Create(syntaxTree);
-            AssemblyExpression subject = (response.SyntaxNode as AssemblyExpression).VerifyNotNull(nameof(response.SyntaxNode));
+            syntaxTree.IsError.Should().BeFalse();
+
+            AssemblyExpression subject = (syntaxTree.SyntaxNodes.First() as AssemblyExpression).VerifyNotNull(nameof(AssemblyExpression));
 
             var body = new Body() + subject;
 

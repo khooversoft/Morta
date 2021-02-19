@@ -22,6 +22,8 @@ namespace Toolbox.Tokenizer.Token
 
         public string Value { get; }
 
+        public bool IsQuoted => false;
+
         public override string ToString() => $"TokenType={TokenType}, TextSpan={TextSpan}, Value=\"{Value}\"";
 
         public override bool Equals(object? obj) => obj is TokenValue value && Equals(value);

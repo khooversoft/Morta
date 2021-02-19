@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using PropertyCompiler.sdk.Expressions;
 using PropertyCompiler.sdk.Syntax;
+using System.Linq;
 using Toolbox.Tools;
 using Xunit;
 
@@ -18,8 +19,9 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ResourceExpressionBuilder().Create(syntaxTree);
-            ResourceExpression subject = (response.SyntaxNode as ResourceExpression)!;
+            syntaxTree.IsError.Should().BeFalse();
+
+            ResourceExpression subject = (syntaxTree.SyntaxNodes.First() as ResourceExpression).VerifyNotNull(nameof(ResourceExpression));
 
             subject.Should().NotBeNull();
             subject.ResourceId.Value.Should().Be("resourceId");

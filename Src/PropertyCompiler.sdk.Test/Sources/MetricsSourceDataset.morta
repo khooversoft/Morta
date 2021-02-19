@@ -1,0 +1,26 @@
+﻿include AzureTypeProperties.base.morta
+
+properties = {
+    linkedServiceName = LinkedServiceReference with {
+        referenceName = "MetricsAttributeSource"
+    },
+    annotations = [],
+    type = "DelimitedText",
+    typeProperties = AzureTabTypeProperties with {
+        location = default with {
+            fileName = "MetricsAttributeExtract.csv",
+            folderPath = "Current",
+            fileSystem = "transfer"
+        }
+    },
+    schema = (name, type)[
+        ("Today", "String"),
+        ("Region", "String"),
+        ("Segment", "String"),
+        ("TotalCount", "String"),
+        ("TotalImpressions", "String"),
+        ("AttributeType", "String"),
+        ("Attribute", "String")
+        ("Value", "String")
+    ]
+}

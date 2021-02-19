@@ -15,7 +15,7 @@ namespace Toolbox.Tokenizer.Syntax
         public BlockSyntax(char blockSignal = '"')
         {
             BlockSignal = blockSignal;
-            Priority = 1;
+            Priority = 2;
         }
 
         public char BlockSignal { get; }
@@ -43,7 +43,7 @@ namespace Toolbox.Tokenizer.Syntax
                     continue;
                 }
 
-                if (span[index] == BlockSignal) return index;
+                if (span[index] == BlockSignal) return index + 1;
             }
 
             throw new ArgumentException("Missing ending quote");

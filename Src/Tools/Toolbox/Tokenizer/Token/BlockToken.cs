@@ -30,6 +30,8 @@ namespace Toolbox.Tokenizer.Token
 
         public string Value { get; }
 
+        public bool IsQuoted => true;
+
         public override string ToString() => $"BlockSignal={BlockSignal}, TextSpan={TextSpan}, TokenType={TokenType}, Value=\"{Value}\"";
 
         public override bool Equals(object? obj) => obj is BlockToken token && Equals(token);

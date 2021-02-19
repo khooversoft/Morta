@@ -24,8 +24,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ResourceExpressionBuilder().Create(syntaxTree);
-            ResourceExpression subject = (response.SyntaxNode as ResourceExpression).VerifyNotNull(nameof(response.SyntaxNode));
+            syntaxTree.IsError.Should().BeFalse();
+
+            ResourceExpression subject = (syntaxTree.SyntaxNodes.First() as ResourceExpression).VerifyNotNull(nameof(ResourceExpression));
 
             var body = new Body() + subject;
 

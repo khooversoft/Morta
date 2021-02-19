@@ -23,7 +23,8 @@ namespace Toolbox.Language.Parser
             _tokenizer = new StringTokenizer()
                 .UseCollapseWhitespace()
                 .UseDoubleQuote()
-                .UseSingleQuote();
+                .UseSingleQuote()
+                .UseComments();
 
             productionRules.GetGrammars()
                 .Where(x => x.Flags != GrammarFlags.Keyword)

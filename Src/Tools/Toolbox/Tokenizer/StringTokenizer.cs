@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Toolbox.Extensions;
 using Toolbox.Tokenizer.Syntax;
 using Toolbox.Tokenizer.Token;
 
@@ -48,6 +49,16 @@ namespace Toolbox.Tokenizer
         }
 
         /// <summary>
+        /// Remove comments from stream
+        /// </summary>
+        /// <returns></returns>
+        public StringTokenizer UseComments()
+        {
+            _syntaxList.Add(new CommentBlockSyntax());
+            return this;
+        }
+
+        /// <summary>
         /// Add tokens to be used in parsing
         /// </summary>
         /// <param name="tokens"></param>
@@ -74,7 +85,7 @@ namespace Toolbox.Tokenizer
         /// </summary>
         /// <param name="sources">n number of strings</param>
         /// <returns>list of tokens</returns>
-        public IReadOnlyList<IToken> Parse(params string[] sources) => Parse(string.Join(string.Empty, sources));
+        public IReadOnlyList<IToken> Parse(params string[] sources) => Parse(string.Join("\n", sources));
 
         /// <summary>
         /// Parse string for tokens

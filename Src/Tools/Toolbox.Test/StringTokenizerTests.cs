@@ -35,6 +35,30 @@ namespace Toolbox.Test
         }
 
         [Fact]
+        public void BasicTokenWithQuotedString_ShouldReturnValidTokens()
+        {
+            IReadOnlyList<IToken> tokens = new StringTokenizer()
+                .UseCollapseWhitespace()
+                .UseDoubleQuote()
+                .UseSingleQuote()
+                .Parse("abc \"def\"");
+
+            var expectedTokens = new IToken[]
+            {
+                new TokenValue("abc", TokenType.Data, new TextSpan(0, 3)),
+                new TokenValue(" ", TokenType.ParseToken, new TextSpan(3, 1)),
+                new BlockToken("\"def\"", new TextSpan(4, 5)),
+            };
+
+            tokens.Count.Should().Be(expectedTokens.Length);
+
+            tokens
+                .Zip(expectedTokens, (o, i) => (o, i))
+                .All(x => x.o.Equals(x.i))
+                .Should().BeTrue();
+        }
+
+        [Fact]
         public void BasicToken_WhenTokenIsSpace_ShouldReturnValidTokens()
         {
             IReadOnlyList<IToken> tokens = new StringTokenizer()
@@ -55,7 +79,6 @@ namespace Toolbox.Test
             tokens
                 .Zip(expectedTokens, (o, i) => (o, i))
                 .All(x => x.o.Equals(x.i))
-                //.All(x => x.o.Value == x.i.Value)
                 .Should().BeTrue();
         }
 

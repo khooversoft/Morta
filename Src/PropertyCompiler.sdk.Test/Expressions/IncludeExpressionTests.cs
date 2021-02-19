@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using PropertyCompiler.sdk.Expressions;
 using PropertyCompiler.sdk.Syntax;
+using System.Linq;
 using Toolbox.Tools;
 using Xunit;
 
@@ -18,8 +19,9 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new IncludeExpressionBuilder().Create(syntaxTree);
-            IncludeExpression subject = (response.SyntaxNode as IncludeExpression).VerifyNotNull(nameof(response.SyntaxNode));
+            syntaxTree.IsError.Should().BeFalse();
+
+            IncludeExpression subject = (syntaxTree.SyntaxNodes.First() as IncludeExpression).VerifyNotNull(nameof(IncludeExpression));
 
             subject.Should().NotBeNull();
             subject!.IncludePath.Value.Should().Be("filePath");

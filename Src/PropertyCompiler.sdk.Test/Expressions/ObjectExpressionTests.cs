@@ -27,8 +27,8 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
+            syntaxTree.IsError.Should().BeFalse();
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             body.Should().NotBeNull();
             body.Children.Count.Should().Be(1);
@@ -60,8 +60,8 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
+            syntaxTree.IsError.Should().BeFalse();
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             body.Should().NotBeNull();
             body.Children.Count.Should().Be(1);
@@ -99,9 +99,8 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
-            body.Should().NotBeNull();
+            syntaxTree.IsError.Should().BeFalse();
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             body.Children.Count.Should().Be(2);
             body.Children.First().As<ScalarAssignment>().Action(x =>
@@ -139,9 +138,8 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
-            body.Should().NotBeNull();
+            syntaxTree.IsError.Should().BeFalse();
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             body.Children.Count.Should().Be(1);
             body.Children.First().As<ObjectExpression>().Action(x =>
@@ -186,9 +184,8 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ObjectExpressionBuilder().Create(syntaxTree);
-            Body body = (response.SyntaxNode as Body)!;
-            body.Should().NotBeNull();
+            syntaxTree.IsError.Should().BeFalse();
+            Body body = (syntaxTree.SyntaxNodes.First() as Body).VerifyNotNull(nameof(Body));
 
             body.Children.Count.Should().Be(1);
             body.Children.First().As<ObjectExpression>().Action(x =>

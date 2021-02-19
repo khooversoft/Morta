@@ -24,8 +24,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new IncludeExpressionBuilder().Create(syntaxTree);
-            IncludeExpression subject = (response.SyntaxNode as IncludeExpression).VerifyNotNull(nameof(response.SyntaxNode));
+            syntaxTree.IsError.Should().BeFalse();
+
+            IncludeExpression subject = (syntaxTree.SyntaxNodes.First() as IncludeExpression).VerifyNotNull(nameof(IncludeExpression));
 
             var body = new Body() + subject;
 

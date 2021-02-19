@@ -24,8 +24,9 @@ namespace PropertyCompiler.sdk.Test.Generator
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ScalarAssignmentBuilder().Create(syntaxTree);
-            ScalarAssignment subject = (response.SyntaxNode as ScalarAssignment).VerifyNotNull(nameof(response.SyntaxNode));
+            syntaxTree.IsError.Should().BeFalse();
+
+            ScalarAssignment subject = (syntaxTree.SyntaxNodes.First() as ScalarAssignment).VerifyNotNull(nameof(ScalarAssignment));
 
             var body = new Body() + subject;
 

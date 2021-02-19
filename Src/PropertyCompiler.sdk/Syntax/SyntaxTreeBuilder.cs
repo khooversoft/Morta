@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using PropertyCompiler.sdk.Expressions;
 using PropertyCompiler.sdk.Grammar;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,17 @@ namespace PropertyCompiler.sdk.Syntax
 
         public SyntaxTreeBuilder Add(params string[] rawData) => this.Action(x => rawData.ForEach(y => x._rawDataLines.Add(y)));
 
+        public SyntaxTreeBuilder AddStandardBuilders()
+        {
+            Add(new AssemblyExpressionBuilder());
+            Add(new IncludeExpressionBuilder());
+            Add(new ScalarAssignmentBuilder());
+            Add(new ResourceExpressionBuilder());
+            Add(new ObjectExpressionBuilder());
+
+            return this;
+        }
+
         public SyntaxTree Build()
         {
             _expressionBuilders.VerifyAssert(x => x.Count > 0, "No expression nodes");
@@ -33,7 +45,7 @@ namespace PropertyCompiler.sdk.Syntax
             IReadOnlyList<IToken> tokens = new TokenParser<SymbolType>(allRules).Parse(rawData);
             SymbolParserContext context = new SymbolParserContext(tokens);
 
-            return new SyntaxTree(context, _expressionBuilders);
+            return new SyntaxTree(context, _expressionBuilders).Build();
         }
     }
 }

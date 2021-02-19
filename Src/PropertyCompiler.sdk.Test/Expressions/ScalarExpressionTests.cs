@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using PropertyCompiler.sdk.Expressions;
 using PropertyCompiler.sdk.Syntax;
+using System.Linq;
 using Toolbox.Tools;
 using Xunit;
 
@@ -18,8 +19,9 @@ namespace PropertyCompiler.sdk.Test.Expressions
                 .Add(raw)
                 .Build();
 
-            SyntaxResponse response = new ScalarAssignmentBuilder().Create(syntaxTree);
-            ScalarAssignment subject = (response.SyntaxNode as ScalarAssignment).VerifyNotNull(nameof(response.SyntaxNode));
+            syntaxTree.IsError.Should().BeFalse();
+
+            ScalarAssignment subject = (syntaxTree.SyntaxNodes.First() as ScalarAssignment).VerifyNotNull(nameof(ScalarAssignment));
 
             subject.Should().NotBeNull();
             subject.VariableName.Value.Should().Be("name");

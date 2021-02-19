@@ -13,6 +13,8 @@ namespace Toolbox.Tokenizer.Token
 
         string Value { get; }
 
+        bool IsQuoted { get; }
+
         TextSpan TextSpan { get; }
     }
 }

@@ -1,0 +1,19 @@
+﻿AzureBlobFSLocation = {
+    readonly type = "AzureBlobFSLocation",
+    required fileName,
+    required folderPath,
+    required fileSystem
+}
+
+LinkedServiceReference = {
+    required referenceName = "MetricsAttributeSource",
+    readonly type = "LinkedServiceReference"
+}
+
+AzureTabTypeProperties = {
+    location = AzureBlobFSLocation,
+    columnDelimiter = ",",
+    escapeChar = "\\",
+    firstRowAsHeader = true,
+    quoteChar = "\""
+}
